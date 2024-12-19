@@ -1,0 +1,109 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register Company</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <!-- /.login-logo -->
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="~/Views/Home/Login.cshtml" class="h1"><b>PHCLT</b></a>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">Select | Update User</p>
+
+                <form action="" method="post">
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Select User</label>
+                        <select type="text" class="form-control select2" id="Userlist" placeholder="">
+                            @foreach (var distMaster in ViewBag.Usermaster)
+                            {
+                                <option value="@distMaster.Id">@distMaster.userfullname</option>
+
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subscription Date</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            </div>
+                            <input type="date" class="form-control" name="Subscriptiondate" id="Subscriptiondate" data-inputmask-alias="datetime" data-mask>
+                            <div class="invalid-feedback">Please enter a valid Subscription date.</div>
+                        </div>
+                        <!-- /.input group -->
+                    </div>
+
+                    <div class="row">
+                        <!-- /.col -->
+                        <div class="col-4 mx-auto">
+                            <button type="button" class="btn btn-primary btn-block" id="Update">Update</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+                <!-- /.social-auth-links -->
+
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+    <script src="~/plugins/select2/js/select2.full.min.js"></script>
+
+</body>
+</html>
+<script>
+
+    $("#Update").click(function (e) {
+        
+        var id = $("#Userlist").val();
+        var Subdate = $("#Subscriptiondate").val();
+
+        $.ajax({
+            url: "/User/UpdateSubscription",
+            type: "POST",
+            data: { Userid: id, Usersubdate: Subdate },
+            success: function (Response) {
+                alert(Response);
+                 $("#Subscriptiondate").val("");
+
+            }
+
+        });
+
+    });
+        
+       
+   
+
+</script>

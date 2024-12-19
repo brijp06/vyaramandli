@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Sub Center List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int UserId = Session["UserId"] != null ? Convert.ToInt32(Session["UserId"]) : 0;
+}
+
+<input type="hidden" id="hdnUserId"  value="@UserId" />
+<input type="hidden" id="hdnSubCenterId" value="" />
+<input type="hidden" id="isEdit" value="false" />
+
+<div >
+    <div class="card-header row">
+        <div class="col-md-6">
+            <h3 class="card-title">Sub Center List</h3>
+        </div>       
+        <div class="col-md-6 col-md-6 row justify-content-end">
+            <a href="/PHCdetail/SubCenter" class="btn btn-light" >
+                Add New
+            </a>
+            
+        </div>
+       
+    </div>    
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>PHC Center</th>
+                            <th>Village Name</th>
+                            <th>Sub Center</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var subCenterDetails in ViewBag.subCenterDetailsList)
+                        {
+                        <tr>
+                            <td>@subCenterDetails.PHCCenterName</td>
+                            <td>@subCenterDetails.villagename</td>
+                            <td>@subCenterDetails.SubCenterName</td>
+                            <td>
+                                <a class="btn btn-xs btn-success" id="btnEdit" onclick="editSubCenter('@subCenterDetails.SubCenterDetailsId')"><i class="fas fa-edit"></i></a>
+                                <a class="btn btn-xs btn-danger" id="btnDelete" onclick="deleteSubCenter('@subCenterDetails.SubCenterDetailsId')"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- AdminLTE -->
+<script src="~/dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="~/dist/js/demo.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="~/plugins/select2/js/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="~/plugins/moment/moment.min.js"></script>
+<script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- AdminLTE App -->
+<script src="~/dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="~/plugins/toastr/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- date-range-picker -->
+<script src="~/Scripts/SubCenter/subcenterlist.js"></script>

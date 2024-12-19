@@ -1,0 +1,10 @@
+PHC NAME
+disc
+taluka
+phc code
+sub centar
+sub cent village
+sub worker
+phc pol
+sub pic
+sub vill sub

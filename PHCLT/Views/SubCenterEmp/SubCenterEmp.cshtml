@@ -1,0 +1,139 @@
+﻿@{
+    ViewBag.Title = "Sub Center Employee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int UserId = Session["UserId"] != null ? Convert.ToInt32(Session["UserId"]) : 0;
+}
+
+<input type="hidden" id="hdnSubCenterEmployeeId" value="" />
+<input type="hidden" id="hdnvillageId" value="" />
+<input type="hidden" id="hdnPHCCenter" value="" />
+<input type="hidden" id="hdnDesignation" value="" />
+<input type="hidden" id="hdnSubCenter" value="" />
+
+
+<h2>Sub Center Employee</h2>
+<div class="card card-default">
+    <div class="card-header">
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="cmbrPHCCenter">PHC Center</label>
+                        <select class="form-control select2" id="cmbrPHCCenter" onchange="getVillage(this.value)" style="width: 100%;">
+                            <option selected="selected" value="0">Select a PHC Center</option>
+                            @foreach (var phc in ViewBag.PHCList)
+                            {
+                                <option value="@phc.id">@phc.phcname</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbrPHCCenter">Sub Center Village Name</label>
+                        <select class="form-control select2" id="cmbvillagename" onchange="getSubCenters(this.value)" style="width: 100%;">
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbrPHCCenter">Sub Center</label>
+                        <select class="form-control select2" id="cmbSubCenter" style="width: 100%;">
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="cmbrDesignation">Designation</label>
+                        <select class="form-control select2" id="cmbrDesignation" style="width: 100%;">
+                            <option selected="selected" value="0">Select a Designation</option>
+                            @foreach (var phc in ViewBag.DesignationList)
+                            {
+                                <option value="@phc.DesignationMasterId">@phc.DesignationName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="txtEmployeeName">Employee Name</label>
+                        <input type="text" class="form-control" id="txtEmployeeName" placeholder="Enter Employee Name">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <button type="button" id="saveSubCenterEmp" class="btn btn-sm btn-primary">Save Details</button>                        
+                        <button type="button" id="btnReset" class="btn btn-sm btn-primary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-default">
+    <div class="card-header">
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>SR No.</th>
+                            <th>Employee</th>
+                            <th>Designation</th>
+                            <th>Sub Center </th>
+                            <th>Village</th>
+                            <th>PHC Center</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var subCenterEmployee in ViewBag.SubCenterEmployeeList)
+                        {
+                            <tr>
+                                <td>@subCenterEmployee.SubCenterEmployeeId</td>
+                                <td>@subCenterEmployee.EmployeeName</td>
+                                <td>@subCenterEmployee.DesignationName</td>
+                                <td>@subCenterEmployee.SubCenterName</td>
+                                <td>@subCenterEmployee.VillageName</td>
+                                <td>@subCenterEmployee.PHCName</td>
+                                <td>
+                                    <button type="button" onclick="getSubCenterEmpList('@subCenterEmployee.SubCenterEmployeeId')" class="btn btn-xs btn-success"><i class="fa fa-user-edit"></i></button>
+                                    <button class="btn btn-xs btn-danger" type="button" id="btndelete" onclick="deleteSubCenterEmployee('@subCenterEmployee.SubCenterEmployeeId')"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- AdminLTE -->
+<script src="~/dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="~/dist/js/demo.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="~/plugins/select2/js/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="~/plugins/moment/moment.min.js"></script>
+<script src="~/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- AdminLTE App -->
+<script src="~/dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<!-- Toastr -->
+<script src="~/plugins/toastr/toastr.min.js"></script>
+<!-- date-range-picker -->
+<script src="~/Scripts/SubCenterEmp/subcenteremp.js"></script>
+

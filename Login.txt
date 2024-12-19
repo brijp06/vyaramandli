@@ -1,0 +1,41 @@
+The windows shared hosting account for akmabrama.in has been set up.
+ 
+
+New Account Info
+
+Domain: akmabrama.in
+Username: akmabram
+Password: qd[2[e625kCALU
+Hosting Package: Silver
+Control Panel (Plesk): https://server.genxwhosting.com:8443/
+Name Server 1: w1.genxwhosting.com
+Name Server 2: w2.genxwhosting.com
+
+Once your domain has Propagated
+FTP Hostname: www.akmabrama.in Webpage URL: http://akmabrama.in
+Control Panel: http://akmabrama.in:8880
+Mail settings
+
+Catch all email with your default email account
+
+POP3 Host Address : mail.akmabrama.in
+
+SMTP Host Address: mail.akmabrama.in
+
+Username: akmabram
+
+Password: qd[2[e625kCALU
+
+Additional mail accounts that you add
+
+POP3 Host Address : mail.akmabrama.in
+
+SMTP Host Address: mail.akmabrama.in
+
+Username : The FULL email address that you are picking up from (e.g. info@yourdomain.com).
+
+If your email client cannot accept a @ symbol, then you may replace this with a backslash .
+
+Password : As specified in your control panel
+
+Thank you for choosing us.
