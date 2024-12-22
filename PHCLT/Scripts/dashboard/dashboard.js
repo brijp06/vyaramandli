@@ -1,134 +1,184 @@
 ﻿jQuery(document).ready(function ($) {
+    $('.select2').select2();
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+    function calculateTotal() {
+        // Get the values of Rate and Qty
+        var rate = parseFloat($('#Rate').val()) || 0;
+        var qty = parseFloat($('#Qty').val()) || 0;
 
-    Getdatagantri($("#txtEntryDate").val());
-    //var productTable = new DataTable('#productTable');
-    //productTable.column(0).visible(false);
-    //productTable.clear().draw();
-    $('#txtEntryDate').on('change', function () {
-        var selectedDate = $(this).val();
-        Getdatagantri(selectedDate);
-    });
+        // Calculate total amount
+        var totalAmount = rate * qty;
 
-    function Getdatagantri(ddate) {
-        var dateInput = new Date(ddate);
-
-        var year = dateInput.getFullYear();
-        var month = ("0" + (dateInput.getMonth() + 1)).slice(-2);  // Adding leading zero for month
-        var day = ("0" + dateInput.getDate()).slice(-2);  // Adding leading zero for day
-        var ddate = year + '/' + month + '/' + day;
-        getgantri(ddate)
+        // Set the calculated value into totalamount input field
+        $('#totalamount').val(totalAmount.toFixed(2));
     }
 
-    function getgantri(gantridate) {
+    // Attach blur event to both Rate and Qty input fields
+    $('#Rate, #Qty').on('blur', function () {
+        calculateTotal();
+    });
+    $('.select2').on('change', function () {
+        if ($(this).val() === null) {
+            $(this).addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+    $('#Qty').on('input', function () {
+        // Allow only numbers
+        //$(this).val($(this).val().replace(/[^0-9]/g, ''));
+        $(this).val($(this).val().replace(/[^0-9.]/g, '')      // Allow numbers and decimal points
+            .replace(/(\..*?)\..*/g, '$1') // Allow only one decimal point
+            .replace(/^(\d*\.\d{2}).*/, '$1')); // Restrict to two decimal places
+    });
+    $('#Rate').on('input', function () {
+        // Allow only numbers
+        //$(this).val($(this).val().replace(/[^0-9]/g, ''));
+        $(this).val($(this).val().replace(/[^0-9.]/g, '')      // Allow numbers and decimal points
+            .replace(/(\..*?)\..*/g, '$1') // Allow only one decimal point
+            .replace(/^(\d*\.\d{2}).*/, '$1')); // Restrict to two decimal places
+    });
+    $(document).on('input', '.qtyInput', function () {
+        //$(this).val($(this).val().replace(/[^0-9]/g, ''));
+        $(this).val($(this).val().replace(/[^0-9.]/g, '')      // Allow numbers and decimal points
+            .replace(/(\..*?)\..*/g, '$1') // Allow only one decimal point
+            .replace(/^(\d*\.\d{2}).*/, '$1')); // Restrict to two decimal places
+    });
+    $('#btnsave').on('click', function () {
+        var Billno = $("#billno").val();
+        var Membid = $("#cmbrmember").val();
+        var billdate = $("#txtEntryDate").val();
+        var remarks = $("#rema").val();
 
+        var MembName = $('#cmbrmember option:selected').text();
+        var Ismem = $("input[name='membership']:checked").val();
+
+        var totalamt = $("#lbltotalamt").text();
+        // Get the payment type if applicable
+        if (Ismem = "Yes") {
+            var Ptype = $('#paymentType').val(); // Will return "Cash" or "Credit"
+        }
+        else {
+            var Ptype = "Cash"; // Will return "Cash" or "Credit"
+            MembName = remarks;
+        }
+        var products = [];
+
+        // Loop through the rows in the product table and collect the data
+        $('#productTable tbody tr').each(function () {
+            var ItemName = $(this).find('td:eq(1)').text();  // Item name (second column)
+            var Qty = $(this).find('td:eq(2)').text();  // Qty (third column, editable)
+            var rate = $(this).find('td:eq(3)').text();  // Item name (second column)
+            var amout = $(this).find('td:eq(4)').text();  // Item name (second column)
+            var Itemid = $(this).find('td:eq(0)').text();  // Item name (second column)
+
+            // Add the product data to the array
+            products.push({
+                ItemName: ItemName,
+                Qty: Qty,
+                rate: rate,
+                amout: amout,
+                Itemid: Itemid
+            });
+        });
         $.ajax({
-            url: '/Home/getgantri?gantridate=' + gantridate,
-            type: 'GET',
-            contentType: 'application/json',
+            type: 'POST',
+            url: '/Home/Addsale',
+            data: { Billno: Billno, billdate: billdate, Membid: Membid, MembName: MembName, Ismem: Ismem, Ptype: Ptype, totalamt: totalamt, products: JSON.stringify(products) },
             success: function (result) {
-                if (result) {
-                    if (result.Message1 !== null) {
-                        console.log('Message 1:', result.Message1);
-                        $("#jantrion").text(result.Message1);
-                    } else {
-                        console.log('Message 1 is null');
+                //var msg = "તમારો બીલ નંબર છે :- " + result.opmessage + "";
+                //Swal.fire({
+                //    title: "તમારો Order અમને મળી ગયો છે.",
+                //    text: msg,
+                //    icon: "success"
+                //});
+                var msg = "તમારો બીલ નંબર છે :- " + result.opmessage + "";
+                Swal.fire({
+                    title: "તમારો Order અમને મળી ગયો છે.",
+                    text: msg,
+                    icon: "success"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //window.location.href = "/KhatarSale/Addsale"; // Replace with your target URL
+                        window.location.href = '/Home/Dashboard';
                     }
-
-                    if (result.Message2 !== null) {
-                        console.log('Message 2:', result.Message2);
-                        $("#jantrirate").text(result.Message2);
-                    } else {
-                        console.log('Message 2 is null');
-                    }
-
-                    if (result.Message4 !== null) {
-                        $("#jantri1").text(result.Message4);
-                    } else {
-                        console.log('Message 2 is null');
-                    }
-                    if (result.Message5 !== null) {
-                      
-                        $("#jantri2").text(result.Message5);
-                    } else {
-                        console.log('Message 2 is null');
-                    }
-                    if (result.Message6 !== null) {
-                        $("#jantri3").text(result.Message6);
-                    } else {
-                        console.log('Message 2 is null');
-                    }
-
-                    //const unwantedKeys = ['Dt', 'PrevDt', 'JantryOn', 'Rate', 'Increase', 'Decrease', 'entryID', 'CPU', 'UDt', 'UId'];
-
-                    //const filteredArray = result.Message3.filter(item => !unwantedKeys.includes(item.Key));
-
-                    //filteredArray.forEach(item => {
-                    //    if (item && item.Key && item.Key.startsWith('Rate')) {
-                    //        const rateValue = item.Key.replace('Rate', '');  // Extract the numeric part
-                    //        //console.log(`${rateValue}: ${item.Value}`);
-                    //        productTable.row.add([rateValue, item.Value
-                    //        ]).draw(false);
-                    //    }
-                    //});
-                    const unwantedKeys = ['Dt', 'PrevDt', 'JantryOn', 'Rate', 'Increase', 'Decrease', 'entryID', 'CPU', 'UDt', 'UId'];
-                    //productTable.clear().draw();
-                    // Assuming result.Message3 is an array of arrays, we need to access the first array
-                    if (Array.isArray(result.Message3) && result.Message3.length > 0) {
-                        const messageArray = result.Message3[0]; // Access the first inner array
-
-                        const filteredArray = messageArray.filter(item => item && item.Key && !unwantedKeys.includes(item.Key));
-
-                        //$.each(filteredArray, function (key, value) {
-                        //    const rateValue = value.Key.replace('Rate', '');
-                        //    $('#rateTable tbody').append('<tr><td>' + rateValue + '</td><td>' + value.Value + '</td></tr>');
-                        //});
-                        $('#rateTable tbody').empty();
-                        for (var i = 0; i < filteredArray.length; i += 2) {
-                            var value1 = filteredArray[i].Key;
-                            var rate1 = filteredArray[i].Value;
-                            var value2 = (i + 1 < filteredArray.length) ? filteredArray[i + 1].Key : "";
-                            var rate2 = (i + 1 < filteredArray.length) ? filteredArray[i + 1].Value : "";
-                            value1 = value1.replace('Rate', '');
-                            value2 = value2.replace('Rate', '');
-                            if (rate1 != 0 || rate2 != 0) {
-                                var row = '<tr>';
-
-                                // Check rate1
-                                if (rate1 != 0) {
-                                    row += '<td>' + value1 + '</td><td>' + rate1 + '</td>';
-                                } else {
-                                    // Leave cells empty if rate1 is 0
-                                    //row += '<td></td><td></td>';
-                                }
-
-                                // Check rate2
-                                if (rate2 != 0) {
-                                    row += '<td>' + value2 + '</td><td>' + rate2 + '</td>';
-                                } else {
-                                    // Leave cells empty if rate2 is 0
-                                    //row += '<td></td><td></td>';
-                                }
-
-                                row += '</tr>';
-                                $('#rateTable tbody').append(row);
-                            }
-                            //$('#rateTable tbody').append('<tr><td>' + value1 + '</td><td>' + rate1 + '</td><td>' + value2 + '</td><td>' + rate2 + '</td></tr>');
-                        }
-                    } else {
-                        //console.error('Invalid structure for result.Message3');
-                        $('#rateTable tbody').empty();
-                    }
-
-
-
-                }
-
+                });
             },
             error: function (error) {
-                console.error('Error:', error.responseText);
-                // Handle the error here
+                // Handle the error response
+                console.log(error);
             }
         });
-    }
+
+
+    });
+
+    // Click event for the Add Product button
+    $('#addProduct').on('click', function () {
+        // Get values from input fields
+        var itemcode = $('#cmbritemname').val();
+        var itemName = $('#cmbritemname option:selected').text();
+
+        var qty = $('#Qty').val();
+        var rate = $('#Rate').val();
+
+
+        // Check if inputs are not empty
+        if (itemName.trim() === '') {
+            alert('કૃપા કરી વસ્તુ નું નામ નાખો');
+            return;
+        }
+        if (qty.trim() === '') {
+            alert('કૃપા કરી જથ્થો નાખો');
+            return;
+        }
+        // Create a new table row with the input values
+        var newRow = `
+                <tr>
+                    <td style="display:none">${itemcode}</td>
+                    <td>${itemName}</td>
+                   <td>
+                        ${qty}
+                    </td>
+                    <td>
+                       ${rate}
+                    </td>
+                    <td>
+                        ${rate * qty} 
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-sm deleteRow">Delete</button>
+                    </td>
+                </tr>
+            `;
+
+        // Append the new row to the table body
+        $('#productTable tbody').append(newRow);
+        var total = 0;
+        $('#productTable tbody tr').each(function () {
+            var amount = parseFloat($(this).find('td:eq(4)').text()) || 0;  // Convert to number
+            total += amount; // Add the number to total
+        });
+        $('#lbltotalamt').text(total.toFixed(2)); // Display total
+        // Clear input fields
+        $('#cmbritemname').val('');
+        $('#Rate').val('');
+        $('#Qty').val('');
+
+    });
+
+    // Click event for the Delete button inside the table
+    $(document).on('click', '.deleteRow', function () {
+        // Remove the row of the clicked button
+        $(this).closest('tr').remove();
+        var total = 0;
+        $('#productTable tbody tr').each(function () {
+            var amount = parseFloat($(this).find('td:eq(4)').text()) || 0;  // Convert to number
+            total += amount; // Add the number to total
+        });
+        $('#lbltotalamt').text(total.toFixed(2)); 
+    });
 });
 

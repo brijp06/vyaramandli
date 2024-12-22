@@ -1,10 +1,10 @@
 ﻿
 @{
-    ViewBag.Title = "DailyReport";
+    ViewBag.Title = "ItemledReport";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>DailyReport</h2>
+<h2>ItemledReport</h2>
 
 <!-- Google Font: Source Sans Pro -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -43,6 +43,11 @@
 <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+<!-- Bootstrap4 Duallistbox -->
+<link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
 
 
 <div class="row">
@@ -78,9 +83,19 @@
                 }
                 <input type="date" class="form-control" id="todate" name="todate" value="@formattedDates">
             </div>
+            <div class="form-group mb-2" style="margin-left: 15px;">
+                <label for="exampleInputEmail1">Item Name</label>
+                <select class="form-control select2bs4" name="cmbritemname" id="cmbritemname" style="width: 100%;">
+                    <option selected="selected">Select a Item name</option>
 
+                    @foreach (var distMaster in ViewBag.itemmast)
+                    {
+                        //<option value="@distMaster.Id">@distMaster.DisName</option>
+                        <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.itemname</option>
+                    }
+                </select>
+            </div>
             <button type="button" class="btn btn-primary" id="btnsave" style="margin-left: 10px;margin-bottom: 1px;" onclick="redirectToDailyReport()">Show</button>
-            <button type="button" class="btn btn-primary" id="btnsave" style="margin-left: 10px;margin-bottom: 1px;" onclick=location.href='@Url.Action("Dashboard", "Home")'>View Dashbord</button>
         </form>
     </div>
 </div>
@@ -91,9 +106,9 @@
                 <th>Date</th>
                 <th>Bill No</th>
                 <th>Bill Type</th>
-                <th>Sabhasad Name</th>
-                <th>Bill Amount</th>
-                @*<th>Action</th>*@
+                <th>In qty</th>
+                <th>Out qty</th>
+                <th>Balance qty</th>
             </tr>
         </thead>
         <tbody>
@@ -103,9 +118,9 @@
                     <td>@distMaster.Transdate.ToString("dd/MM/yyyy")</td>
                     <td>@distMaster.Tranno</td>
                     <td>@distMaster.Billtype</td>
-                    <td>@distMaster.Remarks</td>
-                    <td>@distMaster.Paymentamt</td>
-                    @*<td>@distMaster.Action</td>*@
+                    <td>@distMaster.inqty</td>
+                    <td>@distMaster.outqty</td>
+                    <td>@distMaster.Balanqty</td>
                 </tr>
             }
         </tbody>
@@ -116,12 +131,14 @@
         const label = document.getElementById('rptname');
         var fromdate = document.getElementById('fromdate').value;
         var todate = document.getElementById('todate').value;
-
+        var itemid = document.getElementById('cmbritemname').value
         // Build the URL dynamically using the parameters
-        var url = '@Url.Action("DailyReport", "Reports")' +
+        var url = '@Url.Action("ItemledReport", "Reports")' +
                   '?fromdate=' + encodeURIComponent(fromdate) +
-                  '&todate=' + encodeURIComponent(todate);
+                   '&todate=' + encodeURIComponent(todate) +
+                   '&itemid=' + encodeURIComponent(itemid) ;
 
+        // Redirect to the constructed URL
         // Redirect to the constructed URL
         location.href = url;
     }
@@ -180,5 +197,17 @@
 <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Select2 -->
+<script src="~/plugins/select2/js/select2.full.min.js"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script src="~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
 <script src="~/Scripts/Report/NewReport.js"></script>
+<script>
+    $('.select2').select2();
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    })
+</script>
 

@@ -126,6 +126,7 @@
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\SubCenterEmpController.cs" />
     <Compile Include="Controllers\PHCdetailController.cs" />
+    <Compile Include="Controllers\TransferStockController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filter\AdminFilter.cs" />
     <Compile Include="Filter\UserFilter.cs" />
@@ -2292,6 +2293,7 @@
     <Content Include="Scripts\Report\NewReport.js" />
     <Content Include="Scripts\Report\Reports.js" />
     <Content Include="Scripts\SSMS_20_03_2024.sql" />
+    <Content Include="Scripts\StockTrasfer\StockTrasfer.js" />
     <Content Include="Scripts\SubCenterEmp\subcenteremp.js" />
     <Content Include="Scripts\SubCenter\subcenterlist.js" />
     <Content Include="Scripts\SubCenter\subcenter.js" />
@@ -2327,6 +2329,9 @@
     <Content Include="Views\User\CreateUser.cshtml" />
     <Content Include="Views\User\UserSubUpdate.cshtml" />
     <Content Include="Views\Reports\DailyReport.cshtml" />
+    <Content Include="Views\Home\NewDashboard.cshtml" />
+    <Content Include="Views\TransferStock\Index.cshtml" />
+    <Content Include="Views\Reports\ItemledReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -109,32 +109,38 @@
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a onclick="location.href='@Url.Action("newDashboard", "Home")'" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
                         <!-- Add icons to the links using the .nav-icon class
                         with font-awesome or any other icon font library -->
-                        @if (!string.IsNullOrEmpty(userType) && userType == "Admin")
-                        {
-                            @*<li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-table"></i>
-                                    <p>
-                                        Master
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a onclick="location.href='@Url.Action("PHCdetailList", "PHCDetail")'" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>PHC Detail</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a onclick="location.href='@Url.Action("SubCenterList", "PHCDetail")'" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Sub Center</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
+                        @*@if (!string.IsNullOrEmpty(userType) && userType == "Admin")
+                            {*@
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Transaction
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a onclick="location.href='@Url.Action("Dashboard", "Home")'" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Sales Entry</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a onclick="location.href='@Url.Action("Index", "TransferStock")'" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Stock Trasfer</p>
+                                    </a>
+                                </li>
+                                @*<li class="nav-item">
                                         <a onclick="location.href='@Url.Action("VilageList", "PHCDetail")'" class="nav-link">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Village Master</p>
@@ -145,10 +151,10 @@
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Sub Center Employees</p>
                                         </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
+                                    </li>*@
+                            </ul>
+                        </li>
+                        @*<li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-edit"></i>
                                     <p>
@@ -196,28 +202,35 @@
                                     </li>
                                 </ul>
                             </li>*@
-                        }
-                        @if (!string.IsNullOrEmpty(userType) && userType == "User")
-                        {
+                        @*}*@
 
-                            @*<li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-chart-pie"></i>
-                                    <p>
-                                        Reports
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a onclick="location.href='@Url.Action("UserReport", "Home")'" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Ledger Report</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>*@
-                        }
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <p>
+                                    Reports
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a onclick="location.href='@Url.Action("DailyReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Ledger Report</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a onclick="location.href='@Url.Action("ItemledReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Item Ledger Report</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
 
                         @*<li class="nav-item">
                                 <a onclick="location.href='@Url.Action("Login", "Home")'" class="nav-link">

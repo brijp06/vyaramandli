@@ -51,7 +51,7 @@
                 } else {
 
                 }
-                window.location.href = '/home/Dashboard';
+                window.location.href = '/home/NewDashboard';
                
             },
             error: function (error) {

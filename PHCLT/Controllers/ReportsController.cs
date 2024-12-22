@@ -13,32 +13,91 @@ namespace PHCLT.Controllers
     {
         // GET: Reports
         ClsSystem ob = new ClsSystem();
-        public ActionResult DailyReport(string ledgerid, string ledgername, string fromdate, string todate)
+        public ActionResult DailyReport(string fromdate, string todate)
         {
-            ViewBag.ledgerid = ledgerid;
-            ViewBag.ledgername = ledgername;
+
             List<Dreport> Dreport = new List<Dreport>();
             var userId = HttpContext.Session["UserId"].ToString();
             DataTable dt = new DataTable();
-            if (ledgerid == "46")
-            {
-                //dt = ob.Returntable("Select Tranno,Transdate,Remarks,Receiptamt,Paymentamt from Transactionmaster where Partyaccountid=" + userId + " and PurchaseAccountId=" + ledgerid + " and TransDate between '" + fromdate.ToString() + "' and '" + todate.ToString() + "' order by Transdate");
-                dt = ob.Returntable("exec SabhasadLedgerChikuKeri '" + fromdate.ToString() + "','" + todate.ToString() + "'," + ledgerid + "," + userId + ",0,0,0");
-            }
-            else
-            {
-                //dt = ob.Returntable("Select Tranno,Transdate,Remarks,Receiptamt as Credit,Paymentamt as Debit from Transactionmaster where Partyaccountid=" + userId + " and PurchaseAccountId=" + ledgerid + " and TransDate between '" + fromdate.ToString() + "' and '" + todate.ToString() + "' order by Transdate");
-                dt = ob.Returntable("exec SabhasadLedgerChikuKeri '" + fromdate.ToString() + "','" + todate.ToString() + "'," + ledgerid + "," + userId + ",0,0,0");
-            }
+
+            dt = ob.Returntable("Select Billno Tranno,BillDate Transdate,MembName Remarks,Totalamt as Paymentamt,Ptype as Billtype from BillMain where Userid=" + userId + " and BillDate between '" + fromdate.ToString() + "' and '" + todate.ToString() + "' order by Billdate,billno");
+
+
             double cr = 0;
             Double dr = 0;
             for (int i = 0; i <= dt.Rows.Count - 1; i++)
             {
-                cr += Convert.ToDouble(dt.Rows[i]["Credit"].ToString());
-                dr += Convert.ToDouble(dt.Rows[i]["Debit"].ToString());
+
+                Dreport dreport = new Dreport
+                {
+                    Tranno = dt.Rows[i]["Tranno"].ToString(),
+                    Transdate = Convert.ToDateTime(dt.Rows[i]["Transdate"].ToString()),
+                    Remarks = dt.Rows[i]["Remarks"].ToString(),
+                    Paymentamt = dt.Rows[i]["Paymentamt"].ToString(),
+                    Billtype = dt.Rows[i]["Billtype"].ToString()
+                };
+                Dreport.Add(dreport);
+            }
+            ViewBag.rptdetail = Dreport;
+            ViewBag.fromdt = fromdate;
+            ViewBag.todate = todate;
+
+            return View();
+        }
+        public class itemMaster
+        {
+            public int Id { get; set; }
+            public string itemname { get; set; }
+        }
+        public ActionResult ItemledReport(string fromdate, string todate, string itemid)
+        {
+            List<itemledreport> Dreport = new List<itemledreport>();
+            if (itemid != null)
+            {
+                Dreport = Getitemlegreport(itemid, fromdate, todate);
+            }
+            List<itemMaster> ItemMasters = GetitemMasters();
+            ViewBag.itemmast = ItemMasters;
+            ViewBag.rptdetail = Dreport;
+            ViewBag.fromdt = fromdate;
+            ViewBag.todate = todate;
+            return View();
+        }
+        private List<itemMaster> GetitemMasters()
+        {
+            List<itemMaster> itemMaster = new List<itemMaster>();
+
+            DataTable dt = ob.Returntable("select * from itemmaster where itype='Bhandar' order by itemcode");
+            for (int i = 0; i <= dt.Rows.Count - 1; i++)
+            {
+                itemMaster distMaster = new itemMaster
+                {
+                    Id = (int)dt.Rows[i]["itemcode"],
+                    itemname = dt.Rows[i]["Name"].ToString()
+                };
+                itemMaster.Add(distMaster);
+            }
+            return itemMaster;
+        }
+
+        private List<itemledreport> Getitemlegreport(string itemid, string fromdate, string todate)
+        {
+            List<itemledreport> itemMaster = new List<itemledreport>();
+            var userId = HttpContext.Session["UserId"].ToString();
+            ob.excute("delete from tmpitemledreport where userid=" + userId + "");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'Sales',BillDate,itemid,userid,0,TQty from Billdetail where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + "");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'inword',BillDate,itemid,userid,InQty,0 from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and inqty<>0");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'outword',BillDate,itemid,userid,0,Outqty from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and Outqty<>0");
+            DataTable dt = ob.Returntable("select * from tmpitemledreport where userid=" + userId + "");
+            double cr = 0;
+            Double dr = 0;
+            for (int i = 0; i <= dt.Rows.Count - 1; i++)
+            {
+                cr += Convert.ToDouble(dt.Rows[i]["inqty"].ToString());
+                dr += Convert.ToDouble(dt.Rows[i]["outqty"].ToString());
                 double bal = 0;
 
-                if (cr>dr)
+                if (cr > dr)
                 {
                     bal = cr - dr;
                 }
@@ -46,25 +105,18 @@ namespace PHCLT.Controllers
                 {
                     bal = dr - cr;
                 }
-                Dreport dreport = new Dreport
+                itemledreport distMaster = new itemledreport
                 {
-                    Tranno = dt.Rows[i]["Tranno"].ToString(),
-                    Transdate = Convert.ToDateTime(dt.Rows[i]["Transdate"].ToString()),
-                    Remarks = dt.Rows[i]["Remarks"].ToString(),
-                    Receiptamt = dt.Rows[i]["Credit"].ToString(),
-                    Paymentamt = dt.Rows[i]["Debit"].ToString(),
-                    Balanceamt=bal.ToString("F2")
+                    Tranno = dt.Rows[i]["billno"].ToString(),
+                    Transdate = Convert.ToDateTime(dt.Rows[i]["BillDate"].ToString()),
+                    Billtype = dt.Rows[i]["billtype"].ToString(),
+                    inqty= dt.Rows[i]["inqty"].ToString(),
+                    outqty = dt.Rows[i]["outqty"].ToString(),
+                    Balanqty= bal.ToString("F2")
                 };
-            Dreport.Add(dreport);
+                itemMaster.Add(distMaster);
+            }
+            return itemMaster;
         }
-        ViewBag.rptdetail = Dreport;
-            ViewBag.fromdt = fromdate;
-            ViewBag.todate = todate;
-
-            return View();
     }
-
-
-
-}
 }

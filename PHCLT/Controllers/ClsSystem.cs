@@ -164,7 +164,8 @@ namespace PHCLT.Controllers
                     UserType = "",  // Set the initial values
                     Username = "",
                     UserId = 0,
-                    CustomerId = 0
+                    CustomerId = 0,
+                    uuserid=0,
                 };
 
                 string userName = UserName;
@@ -173,7 +174,7 @@ namespace PHCLT.Controllers
                 {
                     connection.Open();
 
-                    string stringUserQuery = "SELECT UserName, UserId,UsesFullname FROM UserMaster WHERE UserName = @UserName AND Password = @Password";                    
+                    string stringUserQuery = "SELECT * FROM UserMaster WHERE UserName = @UserName AND Password = @Password";                    
 
                     using (SqlCommand command = new SqlCommand(stringUserQuery, connection))
                     {
@@ -186,10 +187,11 @@ namespace PHCLT.Controllers
                             {
                                 // Read values for Admin user
                                 reader.Read();
-                                loginResponse.UserType = "Admin";
+                                loginResponse.UserType = reader["UserType"].ToString();
                                 loginResponse.Username = reader["UserName"].ToString();
                                 loginResponse.UserId = Convert.ToInt32(reader["UserId"]);
                                 loginResponse.UsesFullname = reader["UsesFullname"].ToString();
+                                loginResponse.uuserid= Convert.ToInt32(reader["uuserid"]);
                             }
                         }
                     }

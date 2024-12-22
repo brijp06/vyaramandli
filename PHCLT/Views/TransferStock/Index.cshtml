@@ -1,8 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "Dashboard";
+    ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <link rel="stylesheet" href="~/plugins/toastr/toastr.min.css">
 <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -33,20 +34,6 @@
                     <label for="exampleInputEmail1">Bill No:-</label>
                     <input type="text" class="form-control" id="billno" placeholder="" value="@ViewBag.billno" disabled="disabled">
                 </div>
-                <!-- /.form-group -->
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Member Name</label>
-                    <select class="form-control select2bs4" name="cmbrmember" id="cmbrmember" style="width: 100%;">
-                        <option selected="selected">Select a Member</option>
-
-                        @foreach (var distMaster in ViewBag.DistMasters)
-                        {
-                            //<option value="@distMaster.Id">@distMaster.DisName</option>
-                            <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.Name</option>
-                        }
-                    </select>
-                </div>
-                <!-- /.form-group -->
             </div>
             <!-- /.col -->
             <div class="col-md-6">
@@ -54,43 +41,27 @@
                     <label for="exampleInputEmail1">Bill Date</label>
                     <input type="date" class="form-control" id="txtEntryDate" placeholder="Select Entry Date">
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Remarks</label>
-                    <input type="text" class="form-control" id="rema" placeholder="Enter Remarks" value="@ViewBag.Remarks">
-                </div>
-
-
-
-
             </div>
-            <div class="col-md-6">
 
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputPassword1">શું તમે સભાસદ છો?</label>
-                    <div>
-                        <input type="checkbox" id="yesCheckbox" name="membership" value="Yes">
-                        <label for="yesCheckbox">હા (Yes)</label>
-                        <input type="checkbox" id="noCheckbox" name="membership" value="No" style="margin-left: 10px;">
-                        <label for="noCheckbox">ના (No)</label>
-                    </div>
-                </div>
-                <div class="form-group" id="paymentOptions" style="display: none;">
-                    <label for="paymentType">Payment Type</label>
-                    <select class="form-control" id="paymentType">
-                        <option value="Cash">Cash</option>
-                        <option value="Credit">Credit</option>
+                    <label for="exampleInputEmail1">To Member</label>
+                    <select class="form-control select2bs4" name="usermaster" id="usermaster"  style="width: 100%;">
+                        <option selected="selected">Select a Member</option>
+
+                        @foreach (var distMaster in ViewBag.usermaster)
+                        {
+                            //<option value="@distMaster.Id">@distMaster.DisName</option>
+                            <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.username</option>
+                        }
                     </select>
                 </div>
-
-
-
-
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Item Name</label>
-                    <select class="form-control select2bs4" name="cmbritemname" id="cmbritemname" onchange="getrate(this.value)" style="width: 100%;">
-                        <option selected="selected">Select a District</option>
+                    <select class="form-control select2bs4" name="cmbritemname" id="cmbritemname"  style="width: 100%;">
+                        <option selected="selected">Select a Item Name</option>
 
                         @foreach (var distMaster in ViewBag.itemmast)
                         {
@@ -106,48 +77,11 @@
                     <input type="text" class="form-control" id="Qty" placeholder="Enter Qty" value="@ViewBag.Qty">
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Rate</label>
-                    <input type="text" class="form-control" id="Rate" placeholder="Enter Phc Rate" value="@ViewBag.Rate">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Total Amount:-</label>
-                    <input type="text" class="form-control" id="totalamount" placeholder="" value="@ViewBag.totalamount" disabled="disabled">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <button class="btn btn-success my-1" type="button" id="addProduct">Add Product</button>
-        </div>
-        <div class="table-responsive">
-            <table id="productTable" class="table">
-                <thead>
-                    <tr>
-                        <th style="display:none">HiddenCustomersProduct</th>
-                        <th>Item Name</th>
-                        <th>Qty</th>
-                        <th>Rate</th>
-                        <th>Total Amount</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Table rows will be dynamically populated here -->
-                </tbody>
-            </table>
         </div>
     </div>
     <div class="card-footer">
         <button type="button" id="btnsave" class="btn btn-primary">Save</button>
         <button type="button" id="btnviewlist" class="btn btn-primary">View List</button>
-       
-        <a>Total Amount:</a> <label id="lbltotalamt" style="text-align: center; font-weight: bold; color: red;"></label>
-        
     </div>
 </div>
 <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
@@ -252,42 +186,5 @@
 <script src="~/plugins/select2/js/select2.full.min.js"></script>
 <!-- Bootstrap4 Duallistbox -->
 <script src="~/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const yesCheckbox = document.getElementById('yesCheckbox');
-        const noCheckbox = document.getElementById('noCheckbox');
-        const paymentOptions = document.getElementById('paymentOptions');
+<script src="~/Scripts/StockTrasfer/StockTrasfer.js"></script>
 
-        // Allow only one checkbox to be selected at a time
-        yesCheckbox.addEventListener('change', function () {
-            if (this.checked) {
-                noCheckbox.checked = false;
-                paymentOptions.style.display = 'block'; // Show payment options when Yes is checked
-            } else {
-                paymentOptions.style.display = 'none'; // Hide payment options if unchecked
-            }
-        });
-
-        noCheckbox.addEventListener('change', function () {
-            if (this.checked) {
-                yesCheckbox.checked = false;
-                paymentOptions.style.display = 'none'; // Hide payment options when No is checked
-            }
-        });
-    })
-
-    function getrate(districtId) {
-        $.ajax({
-            url: '/Home/Getrate?itemid=' + districtId,
-            type: 'GET',
-            contentType: 'application/json',
-            success: function (result) {
-                $('#Rate').val(result.rate);
-            },
-            error: function (error) {
-                console.error('Error:', error.responseText);
-            }
-        });
-    }
-</script>
-<script src="~/Scripts/dashboard/dashboard.js"></script>

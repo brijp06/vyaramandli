@@ -4,34 +4,175 @@ using System.Web.Routing;
 using PHCLT.Controllers;
 using PHCLT.Models;
 using System.Data;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace HRMS.Controllers
 {
     public class HomeController : Controller
     {
         ClsSystem ob = new ClsSystem();
+        string userId = "";
         public ActionResult Index()
         {
             return View();
         }
+        public ActionResult NewDashboard()
+        {
+            DateTime currentDate = DateTime.Now;
 
+            // Extract month and year  totalsales
+            int month = currentDate.Month;
+            int year = currentDate.Year;
+            userId = HttpContext.Session["UserId"].ToString();
+            ViewBag.sales = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where MONTH(BillDate) =" + month + " and YEAR(BillDate) =" + year + " and Userid=" + userId + " GROUP BY  YEAR(BillDate), MONTH(BillDate)");
+            ViewBag.totalsales = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + " GROUP BY  YEAR(BillDate), MONTH(BillDate)");
+            if (ViewBag.sales == "")
+            {
+                ViewBag.sales = 0;
+            }
+            if (ViewBag.totalsales == "")
+            {
+                ViewBag.totalsales = 0;
+            }
+            List<itemstock> itemstock = Getitemstock();
+            ViewBag.itemmast = itemstock;
+            return View();
+        }
+        private List<itemstock> Getitemstock()
+        {
+            List<itemstock> itemMaster = new List<itemstock>();
+
+
+            DataTable dt = ob.Returntable("select * from itemmaster where itype='Bhandar' order by itemcode");
+
+            for (int i = 0; i <= dt.Rows.Count - 1; i++)
+            {
+                var balamt = getbal(dt.Rows[i]["itemcode"].ToString());
+                itemstock distMaster = new itemstock
+                {
+                    balanceqty = balamt.ToString(),
+                    itemname = dt.Rows[i]["Name"].ToString()
+                };
+                itemMaster.Add(distMaster);
+
+            }
+            return itemMaster;
+        }
+        private double getbal(string itemid)
+        {
+            userId = HttpContext.Session["UserId"].ToString();
+            var sale = ob.FindOneString("select ISNULL(SUM(TQty), 0) from Billdetail where Itemid=" + itemid + " and Userid=" + userId + "");
+            var instock = ob.FindOneString("select ISNULL(SUM(InQty), 0) from ItemTrans where Itemid=" + itemid + " and Userid=" + userId + "");
+            var outstock = ob.FindOneString("select ISNULL(SUM(Outqty), 0) from ItemTrans where Itemid=" + itemid + " and Userid=" + userId + "");
+
+            double total = 0;
+            total = total + Convert.ToDouble(instock);
+            total = total - Convert.ToDouble(outstock);
+            total = total - Convert.ToDouble(sale);
+
+
+            return total;
+        }
         [HttpGet]
         public ActionResult Login(string isAuth = "")
         {
             return View();
         }
+        public class MembMaster
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
 
+        public class itemMaster
+        {
+            public int Id { get; set; }
+            public string itemname { get; set; }
 
+        }
+        public class itemstock
+        {
+            public string balanceqty { get; set; }
+            public string itemname { get; set; }
+
+        }
+        [HttpGet]
+        public JsonResult Getrate(string itemid)
+        {
+            try
+            {
+                var rate = ob.FindOneString("select isnull(SalesRate,0) from ItemMaster where ItemCode=" + itemid + "");
+                var result = new
+                {
+                    rate = rate,
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
         public ActionResult Dashboard()
         {
-            ViewBag.chiku = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=46");
-            ViewBag.keri = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=80");
-            ViewBag.saving = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=42");
-            ViewBag.udhar = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=51");
-            ViewBag.notice = ob.FindOneString("select Rem from Notice");
+            //ViewBag.chiku = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=46");
+            //ViewBag.keri = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=80");
+            //ViewBag.saving = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=42");
+            //ViewBag.udhar = ob.FindOneString("select isnull(abs(sum(isnull(ReceiptAmt,0)) - sum(isnull(paymentamt,0))),0) from transactionmaster where partyaccountid=" + Convert.ToInt32(Session["UserId"]) + " and PurchaseAccountId=51");
+            //ViewBag.notice = ob.FindOneString("select Rem from Notice");
+            List<MembMaster> distMasters = GetMembMasters();
+            List<itemMaster> ItemMasters = GetitemMasters();
+            userId = HttpContext.Session["UserId"].ToString();
+            DataTable dt = ob.Returntable("select isnull(max(Billno),0)+1 as Billno from billmain where Userid=" + Convert.ToInt32(userId.ToString()) + "");
+            ViewBag.billno = dt.Rows[0]["Billno"].ToString();
+            ViewBag.DistMasters = distMasters;
+            ViewBag.itemmast = ItemMasters;
 
             return View();
         }
+        private List<MembMaster> GetMembMasters()
+        {
+            List<MembMaster> membMasters = new List<MembMaster>();
 
+
+            DataTable dt = ob.Returntable("select * from SabhasadMaster order by Code");
+            for (int i = 0; i <= dt.Rows.Count - 1; i++)
+            {
+                MembMaster distMaster = new MembMaster
+                {
+                    Id = (int)dt.Rows[i]["code"],
+                    Name = dt.Rows[i]["Name"].ToString()
+                };
+
+
+
+                membMasters.Add(distMaster);
+
+            }
+            return membMasters;
+        }
+        private List<itemMaster> GetitemMasters()
+        {
+            List<itemMaster> itemMaster = new List<itemMaster>();
+
+
+            DataTable dt = ob.Returntable("select * from itemmaster where itype='Bhandar' order by itemcode");
+            for (int i = 0; i <= dt.Rows.Count - 1; i++)
+            {
+                itemMaster distMaster = new itemMaster
+                {
+                    Id = (int)dt.Rows[i]["itemcode"],
+                    itemname = dt.Rows[i]["Name"].ToString()
+                };
+
+
+
+                itemMaster.Add(distMaster);
+
+            }
+            return itemMaster;
+        }
 
         public ActionResult UserDashboard()
         {
@@ -74,6 +215,7 @@ namespace HRMS.Controllers
                 Session["UserName"] = loginResponse.Username;
                 Session["UserId"] = loginResponse.UserId;
                 Session["UsesFullname"] = loginResponse.UsesFullname;
+                Session["uuserid"] = loginResponse.uuserid;
                 Session.Timeout = 10;
 
                 if (loginResponse.UserType == "User")
@@ -121,7 +263,52 @@ namespace HRMS.Controllers
                 throw ex;
             }
         }
+        public class Resultpass<T>
+        {
+            public bool opstatus { get; set; }
+            public string opmessage { get; set; }
+        }
+        public class Product
+        {
+            public string ItemName { get; set; } // Corresponds to the 'itemName' from the table
+            public string Qty { get; set; }
 
+            public string Itemid { get; set; }
+
+            public string rate { get; set; }
+            public string amout { get; set; }
+        }
+        [HttpPost]
+        public JsonResult Addsale(string Billno, string billdate, string Membid, string MembName, string Ismem, string Ptype, string totalamt, string products)
+        {
+            Resultpass<object> result = new Resultpass<object>();
+            List<Product> productList = JsonConvert.DeserializeObject<List<Product>>(products);
+            try
+            {
+                var dono = Billno;
+                int mtype = 0;
+                if (Ismem == "Yes")
+                {
+                    mtype = 1;
+                }
+                userId = HttpContext.Session["UserId"].ToString();
+                ob.excute("Insert Into billmain(Billno, BillDate, Membid, MembName, Ptype, Ismem, Userid,Totalamt) values(" + Billno + ",N'" + billdate + "'," + Membid + ",N'" + MembName + "','" + Ptype + "'," + mtype + "," + userId + "," + totalamt + ")");
+
+                foreach (var product in productList)
+                {
+                    ob.excute("Insert Into Billdetail(Billno,BillDate ,Itemid, Itemname, TQty, Ptype, Trate,Tnetamt, Userid) values(" + Billno + ",'" + billdate + "'," + product.Itemid + ",N'" + product.ItemName + "'," + product.Qty + ",'" + Ptype + "'," + product.rate + "," + product.amout + "," + userId + ")");
+
+                }
+
+                result.opstatus = true;
+                result.opmessage = dono;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         [HttpGet]
         public JsonResult getgantri(string gantridate)
         {

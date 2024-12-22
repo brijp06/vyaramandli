@@ -15,6 +15,19 @@
 
 
 });
+$(document).ready(function () {
+    // Attach blur event to the Rate input field
+    $('#Rate').on('blur', function () {
+        // Get the value of Rate
+        var rate = parseFloat($(this).val()) || 0;
+
+        // Perform the calculation (example calculation)
+        var totalAmount = rate * 10; // Replace with your calculation logic
+
+        // Set the calculated value into totalamount input field
+        $('#totalamount').val(totalAmount.toFixed(2));
+    });
+});
 function getTalukaByDistrict(districtId, cmbTaluka, updTalukaId) {
 
     $.ajax({

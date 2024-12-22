@@ -31,6 +31,21 @@ namespace PHCLT.Models
         public string Paymentamt { get; set; }
 
         public string Balanceamt { get; set; }
+
+        public string Billtype { get; set; }
+    }
+
+    public class itemledreport
+    {
+        public string Tranno { get; set; }
+        public DateTime Transdate { get; set; }
+        public string Remarks { get; set; }
+        public string inqty { get; set; }
+        public string outqty { get; set; }
+
+        public string Balanqty { get; set; }
+
+        public string Billtype { get; set; }
     }
 
 }

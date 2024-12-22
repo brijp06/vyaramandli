@@ -31,6 +31,7 @@ namespace PHCLT.Controllers
             public int Id { get; set; }
             public string DisName { get; set; }
         }
+       
         private List<DistMaster> GetDistMasters()
         {
             List<DistMaster> distMasters = new List<DistMaster>();
