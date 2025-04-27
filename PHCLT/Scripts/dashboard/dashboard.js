@@ -54,15 +54,18 @@
 
         var MembName = $('#cmbrmember option:selected').text();
         var Ismem = $("input[name='membership']:checked").val();
+        var villageid = $("#villageSelect").val()
+        var talukaname = $("#cmbtaluka").val()
+
 
         var totalamt = $("#lbltotalamt").text();
         // Get the payment type if applicable
-        if (Ismem = "Yes") {
+        if (Ismem == "Yes") {
             var Ptype = $('#paymentType').val(); // Will return "Cash" or "Credit"
-        }
-        else {
-            var Ptype = "Cash"; // Will return "Cash" or "Credit"
+        } else {
+            var Ptype = "Cash";
             MembName = remarks;
+            Membid = 0;
         }
         var products = [];
 
@@ -73,20 +76,21 @@
             var rate = $(this).find('td:eq(3)').text();  // Item name (second column)
             var amout = $(this).find('td:eq(4)').text();  // Item name (second column)
             var Itemid = $(this).find('td:eq(0)').text();  // Item name (second column)
-
+            var itemgroup = $(this).find('td:eq(5)').text();
             // Add the product data to the array
             products.push({
                 ItemName: ItemName,
                 Qty: Qty,
                 rate: rate,
                 amout: amout,
-                Itemid: Itemid
+                Itemid: Itemid,
+                itemgroup: itemgroup
             });
         });
         $.ajax({
             type: 'POST',
             url: '/Home/Addsale',
-            data: { Billno: Billno, billdate: billdate, Membid: Membid, MembName: MembName, Ismem: Ismem, Ptype: Ptype, totalamt: totalamt, products: JSON.stringify(products) },
+            data: { Billno: Billno, billdate: billdate, Membid: Membid, MembName: MembName, Ismem: Ismem, Ptype: Ptype, totalamt: totalamt, villageid: villageid, talukaname: talukaname, products: JSON.stringify(products) },
             success: function (result) {
                 //var msg = "તમારો બીલ નંબર છે :- " + result.opmessage + "";
                 //Swal.fire({
@@ -120,7 +124,7 @@
         // Get values from input fields
         var itemcode = $('#cmbritemname').val();
         var itemName = $('#cmbritemname option:selected').text();
-
+        var itemgroup = $('#itemGroupSelect').val();
         var qty = $('#Qty').val();
         var rate = $('#Rate').val();
 
@@ -148,6 +152,7 @@
                     <td>
                         ${rate * qty} 
                     </td>
+                    <td style="display:none">${itemgroup}</td>
                     <td>
                         <button class="btn btn-danger btn-sm deleteRow">Delete</button>
                     </td>
@@ -178,7 +183,7 @@
             var amount = parseFloat($(this).find('td:eq(4)').text()) || 0;  // Convert to number
             total += amount; // Add the number to total
         });
-        $('#lbltotalamt').text(total.toFixed(2)); 
+        $('#lbltotalamt').text(total.toFixed(2));
     });
 });
 

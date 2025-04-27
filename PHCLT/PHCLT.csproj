@@ -120,6 +120,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CashController.cs" />
     <Compile Include="Controllers\ClsSystem.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
@@ -2272,6 +2273,7 @@
     <Content Include="obj\Debug\PHCLT.csproj.CopyComplete" />
     <Content Include="obj\Debug\PHCLT.csproj.CoreCompileInputs.cache" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\Cash\Cash.js" />
     <Content Include="Scripts\DailyCollectionEntry\dailycollectionentry.js" />
     <Content Include="Scripts\dashboard\dashboard.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -2332,6 +2334,8 @@
     <Content Include="Views\Home\NewDashboard.cshtml" />
     <Content Include="Views\TransferStock\Index.cshtml" />
     <Content Include="Views\Reports\ItemledReport.cshtml" />
+    <Content Include="Views\Cash\Index.cshtml" />
+    <Content Include="Views\Reports\AcLedReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

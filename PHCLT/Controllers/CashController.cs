@@ -7,59 +7,45 @@ using System.Web.Mvc;
 
 namespace PHCLT.Controllers
 {
-    public class TransferStockController : Controller
+    public class CashController : Controller
     {
-        // GET: TransferStock
+        // GET: Cash
         ClsSystem ob = new ClsSystem();
         string userId = "";
         public ActionResult Index()
         {
-            List<itemMaster> ItemMasters = GetitemMasters();
             List<userMaster> userMaster = GetiuserMasters();
 
             userId = HttpContext.Session["UserId"].ToString();
-            DataTable dt = ob.Returntable("select isnull(max(Billno),0)+1 as Billno from ItemTrans where Userid=" + Convert.ToInt32(userId.ToString()) + "");
-            ViewBag.billno = dt.Rows[0]["Billno"].ToString();
-            ViewBag.itemmast = ItemMasters;
-            ViewBag.usermaster = userMaster;
+            DateTime currentDate = DateTime.Now;
 
+            // Extract month and year  totalsales
+            int month = currentDate.Month;
+            int year = currentDate.Year;
+            DataTable dt = ob.Returntable("select isnull(max(Billno),0)+1 as Billno from PaymentDetail where Userid=" + Convert.ToInt32(userId.ToString()) + "");
+            ViewBag.saleamt = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + "");
+            ViewBag.receiptamt = ob.FindOneString("SELECT isnull(SUM(debit),0) AS MonthlyTotal FROM  PaymentDetail where  YEAR(BillDate) =" + year + " and Userid=" + userId + "");
+            ViewBag.extraamt = ob.FindOneString("SELECT isnull(SUM(credit),0) AS MonthlyTotal FROM  PaymentDetail where  YEAR(BillDate) =" + year + " and Userid=" + userId + "");
+            ViewBag.totalamt = Convert.ToDouble(ViewBag.saleamt)+ Convert.ToDouble(ViewBag.extraamt) - Convert.ToDouble(ViewBag.receiptamt);
+            ViewBag.billno = dt.Rows[0]["Billno"].ToString();
+            ViewBag.usermaster = userMaster;
             return View();
-        }
-        public class itemMaster
-        {
-            public int Id { get; set; }
-            public string itemname { get; set; }
         }
         public class userMaster
         {
             public int Id { get; set; }
             public string username { get; set; }
         }
-        private List<itemMaster> GetitemMasters()
-        {
-            List<itemMaster> itemMaster = new List<itemMaster>();
 
-            DataTable dt = ob.Returntable("select itemcode,Name from itemmaster  order by itemcode");
-            for (int i = 0; i <= dt.Rows.Count - 1; i++)
-            {
-                itemMaster distMaster = new itemMaster
-                {
-                    Id = Convert.ToInt32(dt.Rows[i]["itemcode"]),
-                    itemname = dt.Rows[i]["Name"].ToString()
-                };
-                itemMaster.Add(distMaster);
-            }
-            return itemMaster;
-        }
         private List<userMaster> GetiuserMasters()
         {
             List<userMaster> itemMaster = new List<userMaster>();
-            var suserId = HttpContext.Session["UserId"].ToString();
+            var suserId = HttpContext.Session["uuserid"].ToString();
             var utype = HttpContext.Session["UserType"].ToString();
             DataTable dt = new DataTable();
             if (utype == "Main")
             {
-                dt = ob.Returntable("select StaffId Userid, Name UsesFullname from OfficerMaster where SName=" + suserId + " order by Userid");
+                dt = ob.Returntable("select Code Userid, Name UsesFullname from khedutmaster where code=" + suserId + " order by Userid");
 
             }
             else
@@ -79,23 +65,25 @@ namespace PHCLT.Controllers
             }
             return itemMaster;
         }
+
         public class Resultpass<T>
         {
             public bool opstatus { get; set; }
             public string opmessage { get; set; }
         }
         [HttpPost]
-        public JsonResult Addstock(string Billno, string billdate, string userid, string itemid, string itemname,string qty)
+        public JsonResult Addpayment(string Billno, string billdate, string userid, string qty,string nname)
         {
             Resultpass<object> result = new Resultpass<object>();
             try
             {
                 var dono = Billno;
                 int mtype = 0;
-               
+
                 var suserId = HttpContext.Session["UserId"].ToString();
-                ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname) values(" + Billno + ",'" + billdate + "'," + suserId + ",0," + qty + "," + itemid + ",N'" + itemname + "')");
-                ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname) values(" + Billno + ",'" + billdate + "'," + userid + "," + qty + ",0," + itemid + ",N'" + itemname + "')");
+                var fullname= HttpContext.Session["UsesFullname"].ToString(); 
+                ob.excute("Insert Into PaymentDetail(Billno, Billdate,Userid,credit,debit,rem) values(" + Billno + ",'" + billdate + "'," + suserId + ",0," + qty + ",N'" + nname  + " ને જમા આપ્યા." + "')");
+                ob.excute("Insert Into PaymentDetail(Billno, Billdate,Userid,credit,debit,rem) values(" + Billno + ",'" + billdate + "'," + userid + "," + qty + ",0,N'" + fullname + " માંથી જમા આવ્યા." + "')");
 
 
                 result.opstatus = true;

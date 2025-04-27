@@ -140,18 +140,24 @@
                                         <p>Stock Trasfer</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a onclick="location.href='@Url.Action("Index", "Cash")'" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Cash Collection</p>
+                                    </a>
+                                </li>
                                 @*<li class="nav-item">
-                                        <a onclick="location.href='@Url.Action("VilageList", "PHCDetail")'" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Village Master</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a onclick="location.href='@Url.Action("SubCenterEmp", "SubCenterEmp")'" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Sub Center Employees</p>
-                                        </a>
-                                    </li>*@
+            <a onclick="location.href='@Url.Action("VilageList", "PHCDetail")'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Village Master</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a onclick="location.href='@Url.Action("SubCenterEmp", "SubCenterEmp")'" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sub Center Employees</p>
+            </a>
+        </li>*@
                             </ul>
                         </li>
                         @*<li class="nav-item">
@@ -205,31 +211,39 @@
                         @*}*@
 
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
-                                <p>
-                                    Reports
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a onclick="location.href='@Url.Action("DailyReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Ledger Report</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a onclick="location.href='@Url.Action("ItemledReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Item Ledger Report</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-chart-pie"></i>
+                            <p>
+                                Reports
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a onclick="location.href='@Url.Action("DailyReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Ledger Report</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a onclick="location.href='@Url.Action("ItemledReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Item Ledger Report</p>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a onclick="location.href='@Url.Action("AcLedReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Account Ledger Report</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
 
                         @*<li class="nav-item">

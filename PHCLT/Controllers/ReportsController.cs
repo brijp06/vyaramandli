@@ -63,16 +63,58 @@ namespace PHCLT.Controllers
             ViewBag.todate = todate;
             return View();
         }
+        public ActionResult AcLedReport(string fromdate, string todate)
+        {
+            List<itemledreport> Dreport = new List<itemledreport>();
+            var userId = HttpContext.Session["UserId"].ToString();
+            ob.excute("delete from Tmpacled where userid=" + userId + "");
+            ob.excute("insert into Tmpacled(billno, billtype,BillDate, Cramt, Dramt,userid) select billno,N'વેચાણ',BillDate,Totalamt,0,Userid from billmain where  billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + "");
+            ob.excute("insert into Tmpacled(billno, billtype,BillDate, Cramt, Dramt,userid) select billno,rem,BillDate,credit,debit,Userid from paymentdetail where billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + "");
+            DataTable dt = ob.Returntable("select * from Tmpacled where userid=" + userId + " order by BillDate");
+            double cr = 0;
+            Double dr = 0;
+            for (int i = 0; i <= dt.Rows.Count - 1; i++)
+            {
+                cr += Convert.ToDouble(dt.Rows[i]["Cramt"].ToString());
+                dr += Convert.ToDouble(dt.Rows[i]["Dramt"].ToString());
+                double bal = 0;
+
+                if (cr > dr)
+                {
+                    bal = cr - dr;
+                }
+                else
+                {
+                    bal = dr - cr;
+                }
+                itemledreport distMaster = new itemledreport
+                {
+                    Tranno = dt.Rows[i]["billno"].ToString(),
+                    Transdate = Convert.ToDateTime(dt.Rows[i]["BillDate"].ToString()),
+                    Billtype = dt.Rows[i]["billtype"].ToString(),
+                    inqty = dt.Rows[i]["Cramt"].ToString(),
+                    outqty = dt.Rows[i]["Dramt"].ToString(),
+                    Balanqty = bal.ToString("F2")
+                };
+                Dreport.Add(distMaster);
+            }
+
+
+            ViewBag.rptdetail = Dreport;
+            ViewBag.fromdt = fromdate;
+            ViewBag.todate = todate;
+            return View();
+        }
         private List<itemMaster> GetitemMasters()
         {
             List<itemMaster> itemMaster = new List<itemMaster>();
 
-            DataTable dt = ob.Returntable("select * from itemmaster where itype='Bhandar' order by itemcode");
+            DataTable dt = ob.Returntable("select * from itemmaster order by itemcode");
             for (int i = 0; i <= dt.Rows.Count - 1; i++)
             {
                 itemMaster distMaster = new itemMaster
                 {
-                    Id = (int)dt.Rows[i]["itemcode"],
+                    Id = Convert.ToInt32(dt.Rows[i]["itemcode"]),
                     itemname = dt.Rows[i]["Name"].ToString()
                 };
                 itemMaster.Add(distMaster);
@@ -88,7 +130,7 @@ namespace PHCLT.Controllers
             ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'Sales',BillDate,itemid,userid,0,TQty from Billdetail where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + "");
             ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'inword',BillDate,itemid,userid,InQty,0 from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and inqty<>0");
             ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'outword',BillDate,itemid,userid,0,Outqty from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and Outqty<>0");
-            DataTable dt = ob.Returntable("select * from tmpitemledreport where userid=" + userId + "");
+            DataTable dt = ob.Returntable("select * from tmpitemledreport where userid=" + userId + " order by BillDate");
             double cr = 0;
             Double dr = 0;
             for (int i = 0; i <= dt.Rows.Count - 1; i++)
@@ -110,9 +152,9 @@ namespace PHCLT.Controllers
                     Tranno = dt.Rows[i]["billno"].ToString(),
                     Transdate = Convert.ToDateTime(dt.Rows[i]["BillDate"].ToString()),
                     Billtype = dt.Rows[i]["billtype"].ToString(),
-                    inqty= dt.Rows[i]["inqty"].ToString(),
+                    inqty = dt.Rows[i]["inqty"].ToString(),
                     outqty = dt.Rows[i]["outqty"].ToString(),
-                    Balanqty= bal.ToString("F2")
+                    Balanqty = bal.ToString("F2")
                 };
                 itemMaster.Add(distMaster);
             }

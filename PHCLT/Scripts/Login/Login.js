@@ -51,7 +51,15 @@
                 } else {
 
                 }
-                window.location.href = '/home/NewDashboard';
+                if (result.UserType == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops... Username or Passowrd is Incorrent",
+                    });
+                }
+                else {
+                    window.location.href = '/home/NewDashboard';
+                }
                
             },
             error: function (error) {

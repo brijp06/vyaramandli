@@ -20,7 +20,7 @@ namespace PHCLT.Controllers
 
         public Int32 excute(string sql)
         {
-            cn.ConnectionString=ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
+            cn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
             SqlCommand cmd = new SqlCommand(sql, cn);
             cn.Open();
             cmd.ExecuteNonQuery();
@@ -30,11 +30,11 @@ namespace PHCLT.Controllers
 
         public DataTable Returntable(string sql)
         {
-            DataTable dt=null;
+            DataTable dt = null;
             cn.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
             SqlDataAdapter adp = new SqlDataAdapter(sql, cn);
             cn.Open();
-            DataSet  ds=new DataSet();
+            DataSet ds = new DataSet();
             adp.Fill(ds);
             cn.Close();
             dt = ds.Tables[0];
@@ -86,11 +86,11 @@ namespace PHCLT.Controllers
             adp.Fill(ds);
             cn.Close();
             dt = ds.Tables[0];
-            if (dt.Rows.Count > 0) 
-                {
+            if (dt.Rows.Count > 0)
+            {
                 Onestr = dt.Rows[0][0].ToString();
-                }
-                
+            }
+
             return Onestr;
         }
 
@@ -165,7 +165,7 @@ namespace PHCLT.Controllers
                     Username = "",
                     UserId = 0,
                     CustomerId = 0,
-                    uuserid=0,
+                    uuserid = 0,
                 };
 
                 string userName = UserName;
@@ -174,7 +174,7 @@ namespace PHCLT.Controllers
                 {
                     connection.Open();
 
-                    string stringUserQuery = "SELECT * FROM UserMaster WHERE UserName = @UserName AND Password = @Password";                    
+                    string stringUserQuery = "SELECT * FROM QualityMaster WHERE Code = @UserName AND Pass = @Password";
 
                     using (SqlCommand command = new SqlCommand(stringUserQuery, connection))
                     {
@@ -187,15 +187,48 @@ namespace PHCLT.Controllers
                             {
                                 // Read values for Admin user
                                 reader.Read();
-                                loginResponse.UserType = reader["UserType"].ToString();
-                                loginResponse.Username = reader["UserName"].ToString();
-                                loginResponse.UserId = Convert.ToInt32(reader["UserId"]);
-                                loginResponse.UsesFullname = reader["UsesFullname"].ToString();
-                                loginResponse.uuserid= Convert.ToInt32(reader["uuserid"]);
+                                loginResponse.UserType = "Main";
+                                loginResponse.Username = reader["Name"].ToString();
+                                loginResponse.UserId = Convert.ToInt32(reader["Code"]);
+                                loginResponse.UsesFullname = reader["Name"].ToString();
+                                loginResponse.uuserid = Convert.ToInt32(reader["BranchId"]);
                             }
+                            else
+                            {
+                                reader.Close();
+                                string stringUserQueryel = "select * from OfficerMaster where StaffId = @UserName AND Pass = @Password";
+                                using (SqlCommand commandn = new SqlCommand(stringUserQueryel, connection))
+                                {
+                                    commandn.Parameters.AddWithValue("@UserName", userName);
+                                    commandn.Parameters.AddWithValue("@Password", Password);
+
+                                    using (SqlDataReader readern = commandn.ExecuteReader())
+                                    {
+                                        if (readern.HasRows)
+                                        {
+                                            readern.Read();
+                                            loginResponse.UserType = "Sub";
+                                            loginResponse.Username = readern["Name"].ToString();
+                                            loginResponse.UserId = Convert.ToInt32(readern["StaffId"]);
+                                            loginResponse.UsesFullname = readern["Name"].ToString();
+                                            loginResponse.uuserid = Convert.ToInt32(readern["SName"]);
+                                        }
+                                    }
+                                }
+                            }
+                            //if (dt.Rows.Count > 0)
+                            //{
+                            //    loginResponse.UserType = "Under";
+                            //    loginResponse.Username = dt.Rows[0]["Name"].ToString();
+                            //    loginResponse.UserId = Convert.ToInt32(dt.Rows[0]["StaffId"]);
+                            //    loginResponse.UsesFullname = dt.Rows[0]["Name"].ToString();
+                            //    loginResponse.uuserid = Convert.ToInt32(dt.Rows[0]["SName"]);
+                            //}
                         }
                     }
-                    
+
+
+
                     return loginResponse;
                 }
             }
@@ -211,7 +244,7 @@ namespace PHCLT.Controllers
             {
                 LoginResponse loginResponse = new LoginResponse
                 {
-                    UserType = "",  
+                    UserType = "",
                     Username = "",
                     UserId = 0,
                     CustomerId = 0,
