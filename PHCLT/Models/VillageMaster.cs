@@ -33,8 +33,17 @@ namespace PHCLT.Models
         public string Balanceamt { get; set; }
 
         public string Billtype { get; set; }
+
+        public List<BillItem> Items { get; set; }
     }
 
+    public class BillItem
+    {
+        public string ItemName { get; set; }
+        public int Qty { get; set; }
+        public decimal Rate { get; set; }
+        public decimal Total { get; set; }
+    }
     public class itemledreport
     {
         public string Tranno { get; set; }

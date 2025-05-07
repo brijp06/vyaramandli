@@ -88,10 +88,10 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="~/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
-            </a>
+            <!--<a href="index3.html" class="brand-link">-->
+                @*<img src="~/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">*@
+                <!--<span class="brand-text font-weight-light">મેઘા મંડળી</span>
+            </a>-->
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
@@ -112,7 +112,8 @@
                         <li class="nav-item">
                             <a onclick="location.href='@Url.Action("newDashboard", "Home")'" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>Dashboard</p>
+                                @*<p>Dashboard</p>*@
+                                <p>મુખ્ય પેજ</p>
                             </a>
                         </li>
                         <!-- Add icons to the links using the .nav-icon class
@@ -123,7 +124,8 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
-                                    Transaction
+                                    @*Transaction*@
+                                    વ્યવહારો
                                     <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
@@ -131,19 +133,22 @@
                                 <li class="nav-item">
                                     <a onclick="location.href='@Url.Action("Dashboard", "Home")'" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Sales Entry</p>
+                                        @*<p>Sales Entry</p>*@
+                                        <p>વેચાણ એન્ટ્રી</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a onclick="location.href='@Url.Action("Index", "TransferStock")'" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Stock Trasfer</p>
+                                        @*<p>Stock Trasfer</p>*@
+                                        <p>સ્ટોક ટ્રાન્સફર</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a onclick="location.href='@Url.Action("Index", "Cash")'" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Cash Collection</p>
+                                        @*<p>Cash Collection</p>*@
+                                        <p>કેશ કલેક્સન</p>
                                     </a>
                                 </li>
                                 @*<li class="nav-item">
@@ -215,7 +220,7 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-chart-pie"></i>
                             <p>
-                                Reports
+                                રીપોર્ટ
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -223,7 +228,9 @@
                             <li class="nav-item">
                                 <a onclick="location.href='@Url.Action("DailyReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Ledger Report</p>
+                                    @*<p>Ledger Report</p>*@
+                                    <p>વેચાણ રીપોર્ટ</p>
+
                                 </a>
                             </li>
                         </ul>
@@ -231,7 +238,9 @@
                             <li class="nav-item">
                                 <a onclick="location.href='@Url.Action("ItemledReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Item Ledger Report</p>
+                                    @*<p>Item Ledger Report</p>*@
+                                    <p>સ્ટોક રિપોર્ટ</p>
+
                                 </a>
                             </li>
                         </ul>
@@ -239,7 +248,9 @@
                             <li class="nav-item">
                                 <a onclick="location.href='@Url.Action("AcLedReport", "Reports")' + '?fromdate=' + new Date().toISOString().split('T')[0] + '&todate=' + new Date().toISOString().split('T')[0]" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Account Ledger Report</p>
+                                    @*<p>Account Ledger Report</p>*@
+                                    <p>એકાઉન્ટ રિપોર્ટ</p>
+
                                 </a>
                             </li>
                         </ul>
@@ -304,10 +315,10 @@
         <!-- /.control-sidebar -->
         <!-- Main Footer -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2020-2024 <a href="#">Naik Consultant</a>.</strong>
+            <strong>Copyright &copy; 2020-2025 <a href="#">Naik Consultant</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.2.0
+                <b>Version</b> 1.1.0
             </div>
         </footer>
     </div>

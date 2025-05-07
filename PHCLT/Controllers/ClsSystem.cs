@@ -192,6 +192,7 @@ namespace PHCLT.Controllers
                                 loginResponse.UserId = Convert.ToInt32(reader["Code"]);
                                 loginResponse.UsesFullname = reader["Name"].ToString();
                                 loginResponse.uuserid = Convert.ToInt32(reader["BranchId"]);
+
                             }
                             else
                             {

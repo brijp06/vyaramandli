@@ -27,7 +27,12 @@ namespace HRMS.Controllers
             int year = currentDate.Year;
             userId = HttpContext.Session["UserId"].ToString();
             ViewBag.sales = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where MONTH(BillDate) =" + month + " and YEAR(BillDate) =" + year + " and Userid=" + userId + " GROUP BY  YEAR(BillDate), MONTH(BillDate)");
-            ViewBag.totalsales = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + " GROUP BY  YEAR(BillDate), MONTH(BillDate)");
+            ViewBag.totalsales = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + " GROUP BY  YEAR(BillDate)");
+            ViewBag.totalsalesm = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + " and membid<>0 GROUP BY  YEAR(BillDate)");
+            ViewBag.totalsalesom = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + " and membid=0 GROUP BY  YEAR(BillDate)");
+            ViewBag.totalsalesmc = ob.FindOneString("SELECT count(*) FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + " and membid<>0 GROUP BY  YEAR(BillDate)");
+            ViewBag.totalsalesomc = ob.FindOneString("SELECT count(*) FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + " and membid=0 GROUP BY  YEAR(BillDate)");
+
             var saleamt = ob.FindOneString("SELECT isnull(SUM(Totalamt),0) AS MonthlyTotal FROM  BillMain where  YEAR(BillDate) =" + year + " and Userid=" + userId + "");
             ViewBag.receiptamt = ob.FindOneString("SELECT isnull(SUM(debit),0) AS MonthlyTotal FROM  PaymentDetail where  YEAR(BillDate) =" + year + " and Userid=" + userId + "");
             var extraamt = ob.FindOneString("SELECT isnull(SUM(credit),0) AS MonthlyTotal FROM  PaymentDetail where  YEAR(BillDate) =" + year + " and Userid=" + userId + "");
@@ -204,6 +209,17 @@ namespace HRMS.Controllers
                 name = row["name"].ToString()
             });
             return Json(villages, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetMembername(string villagecode)
+        {
+            var dt = ob.Returntable("select * from SabhasadMaster where citycode=" + villagecode + " order by Code");
+            var membname = dt.AsEnumerable().Select(row => new
+            {
+                code = row["code"].ToString(),
+                name = row["name"].ToString()
+            });
+            return Json(membname, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetItemsByGroup(string groupId)

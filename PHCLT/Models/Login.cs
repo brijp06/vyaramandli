@@ -27,6 +27,8 @@ namespace PHCLT.Models
         public string UserSubdate { get; set; }
         public int uuserid { get; set; }
 
+        public int branchid { get; set; }
+
 
     }
     public class PHCdetailList

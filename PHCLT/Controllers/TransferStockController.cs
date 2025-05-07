@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -60,6 +61,18 @@ namespace PHCLT.Controllers
             if (utype == "Main")
             {
                 dt = ob.Returntable("select StaffId Userid, Name UsesFullname from OfficerMaster where SName=" + suserId + " order by Userid");
+                DataTable dss = new DataTable();
+                var sid = HttpContext.Session["uuserid"].ToString();
+                dss = ob.Returntable("select Code Userid, Name UsesFullname from KhedutMaster where Code=" + sid + " order by Code");
+                for (int ij = 0; ij <= dss.Rows.Count - 1; ij++)
+                {
+                    userMaster distMaster = new userMaster
+                    {
+                        Id = Convert.ToInt32(dss.Rows[ij]["Userid"]),
+                        username = dss.Rows[ij]["UsesFullname"].ToString()
+                    };
+                    itemMaster.Add(distMaster);
+                }
 
             }
             else
@@ -84,19 +97,31 @@ namespace PHCLT.Controllers
             public bool opstatus { get; set; }
             public string opmessage { get; set; }
         }
+        public class Product
+        {
+            public string ItemName { get; set; } // Corresponds to the 'itemName' from the table
+            public string Qty { get; set; }
+
+            public string Itemid { get; set; }
+
+        }
         [HttpPost]
-        public JsonResult Addstock(string Billno, string billdate, string userid, string itemid, string itemname,string qty)
+        public JsonResult Addstock(string Billno, string billdate, string userid,string username, string products)
         {
             Resultpass<object> result = new Resultpass<object>();
+            List<Product> productList = JsonConvert.DeserializeObject<List<Product>>(products);
             try
             {
                 var dono = Billno;
                 int mtype = 0;
                
                 var suserId = HttpContext.Session["UserId"].ToString();
-                ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname) values(" + Billno + ",'" + billdate + "'," + suserId + ",0," + qty + "," + itemid + ",N'" + itemname + "')");
-                ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname) values(" + Billno + ",'" + billdate + "'," + userid + "," + qty + ",0," + itemid + ",N'" + itemname + "')");
-
+                var fullname = HttpContext.Session["UsesFullname"].ToString();
+                foreach (var product in productList)
+                {
+                    ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname,remarks ) values(" + Billno + ",'" + billdate + "'," + suserId + ",0," + product.Qty + "," + product.Itemid + ",N'" + product.ItemName + "',N'" + username + " ને ટ્રાન્સફર આપ્યા.')");
+                    ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname,remarks ) values(" + Billno + ",'" + billdate + "'," + userid + "," + product.Qty + ",0," + product.Itemid + ",N'" + product.ItemName + "',N'" + fullname + " માંથી  ટ્રાન્સફર આવ્યા.')");
+                }
 
                 result.opstatus = true;
                 result.opmessage = dono;

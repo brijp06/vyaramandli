@@ -19,7 +19,7 @@ namespace PHCLT.Controllers
             List<Dreport> Dreport = new List<Dreport>();
             var userId = HttpContext.Session["UserId"].ToString();
             DataTable dt = new DataTable();
-
+            List<Dreport> DreportList = new List<Dreport>();
             dt = ob.Returntable("Select Billno Tranno,BillDate Transdate,MembName Remarks,Totalamt as Paymentamt,Ptype as Billtype from BillMain where Userid=" + userId + " and BillDate between '" + fromdate.ToString() + "' and '" + todate.ToString() + "' order by Billdate,billno");
 
 
@@ -34,16 +34,36 @@ namespace PHCLT.Controllers
                     Transdate = Convert.ToDateTime(dt.Rows[i]["Transdate"].ToString()),
                     Remarks = dt.Rows[i]["Remarks"].ToString(),
                     Paymentamt = dt.Rows[i]["Paymentamt"].ToString(),
-                    Billtype = dt.Rows[i]["Billtype"].ToString()
+                    Billtype = dt.Rows[i]["Billtype"].ToString(),
+                    Items = new List<BillItem>()
                 };
-                Dreport.Add(dreport);
+
+                string tranno = dt.Rows[i]["Tranno"].ToString();
+                DataTable itemTable = ob.Returntable("SELECT * FROM Billdetail WHERE BillNo = '" + tranno + "' and Userid=" + userId + "");
+
+                foreach (DataRow itemRow in itemTable.Rows)
+                {
+                    BillItem item = new BillItem
+                    {
+                        ItemName = itemRow["ItemName"].ToString(),
+                        Qty = Convert.ToInt32(itemRow["TQty"]),
+                        Rate = Convert.ToDecimal(itemRow["TRate"]),
+                        Total = Convert.ToDecimal(itemRow["Tnetamt"])
+                    };
+
+                    dreport.Items.Add(item);
+                }
+
+                DreportList.Add(dreport);
+                //Dreport.Add(dreport);
             }
-            ViewBag.rptdetail = Dreport;
+            ViewBag.rptdetail = DreportList;
             ViewBag.fromdt = fromdate;
             ViewBag.todate = todate;
 
             return View();
         }
+       
         public class itemMaster
         {
             public int Id { get; set; }
@@ -128,8 +148,8 @@ namespace PHCLT.Controllers
             var userId = HttpContext.Session["UserId"].ToString();
             ob.excute("delete from tmpitemledreport where userid=" + userId + "");
             ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'Sales',BillDate,itemid,userid,0,TQty from Billdetail where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + "");
-            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'inword',BillDate,itemid,userid,InQty,0 from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and inqty<>0");
-            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'outword',BillDate,itemid,userid,0,Outqty from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and Outqty<>0");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,remarks,BillDate,itemid,userid,InQty,0 from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and inqty<>0");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,remarks,BillDate,itemid,userid,0,Outqty from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and Outqty<>0");
             DataTable dt = ob.Returntable("select * from tmpitemledreport where userid=" + userId + " order by BillDate");
             double cr = 0;
             Double dr = 0;
@@ -147,6 +167,7 @@ namespace PHCLT.Controllers
                 {
                     bal = dr - cr;
                 }
+
                 itemledreport distMaster = new itemledreport
                 {
                     Tranno = dt.Rows[i]["billno"].ToString(),

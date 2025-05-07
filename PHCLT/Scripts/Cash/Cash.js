@@ -1,4 +1,45 @@
 ﻿jQuery(document).ready(function ($) {
+    validateSelection();
+
+    function validateSelection() {
+        var selectedValue = $('#usermaster').val();
+        if (!selectedValue) {
+            $('#btnsave').prop('disabled', true);
+            $('#errorMsg').show();
+        } else {
+            $('#btnsave').prop('disabled', false);
+            $('#errorMsg').hide();
+        }
+    }
+    $('#usermaster').on('change', function () {
+        validateSelection();
+    });
+    $('#Qty').on('input', function () {
+        //var enteredQty = parseFloat($(this).val());
+        //var labelText = $('#lblTotal').text();
+        //var totalAmt = parseFloat(labelText.replace(/[^0-9.]/g, ''));
+
+        //if (!isNaN(enteredQty) && enteredQty >= totalAmt) {
+        //    $('#errorMsg').show();
+        //    $('#btnsave').prop('disabled', true);
+        //} else {
+        //    $('#errorMsg').hide();
+        //    $('#btnsave').prop('disabled', false);
+        //}
+        var enteredQty = parseFloat($(this).val());
+        var labelText = $('#lblTotal').text();
+        var totalAmt = parseFloat(labelText.replace(/[^0-9.,]/g, '').replace(/,/g, ''));
+
+        console.log("enteredQty:", enteredQty, "totalAmt:", totalAmt); // Debugging line
+
+        if (!isNaN(enteredQty) && enteredQty > totalAmt) {
+            $('#errorMsg').show();
+            $('#btnsave').prop('disabled', true);
+        } else {
+            $('#errorMsg').hide();
+            $('#btnsave').prop('disabled', false);
+        }
+    });
     $('#btnsave').on('click', function () {
         var Billno = $("#billno").val();
         var userid = $("#usermaster").val();

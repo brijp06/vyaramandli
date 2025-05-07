@@ -14,11 +14,11 @@
 <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 <!-- Bootstrap4 Duallistbox -->
 <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-<h2>Sale Entry</h2>
+<h2>Stock Trasfer Entry</h2>
 <div class="card card-default">
     <input type="hidden" id="hdnCmbTalukaId" value="@ViewBag.talikaid" />
     <div class="card-header">
-        <h3 class="card-title">Sale Entry</h3>
+        <h3 class="card-title">Stock Trasfer</h3>
 
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -46,21 +46,31 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="exampleInputEmail1">To Member</label>
-                    <select class="form-control select2bs4" name="usermaster" id="usermaster"  style="width: 100%;">
-                        <option selected="selected">Select a Member</option>
+                    @*<select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
+                            <option selected="selected">Select a Member</option>
 
+                            @foreach (var distMaster in ViewBag.usermaster)
+                            {
+                                //<option value="@distMaster.Id">@distMaster.DisName</option>
+                                <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.username</option>
+                            }
+                        </select>*@
+                    <select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
+                        <option selected="selected" value="">Select a Member</option>
                         @foreach (var distMaster in ViewBag.usermaster)
                         {
-                            //<option value="@distMaster.Id">@distMaster.DisName</option>
-                            <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.username</option>
+                            <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>
+                                @distMaster.username
+                            </option>
                         }
                     </select>
+                    <span id="errorMsg" style="color:red; display:none;">કૃપા કરી નામ Select કરો.</span>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Item Name</label>
-                    <select class="form-control select2bs4" name="cmbritemname" id="cmbritemname"  style="width: 100%;">
+                    <select class="form-control select2bs4" name="cmbritemname" id="cmbritemname" style="width: 100%;">
                         <option selected="selected">Select a Item Name</option>
 
                         @foreach (var distMaster in ViewBag.itemmast)
@@ -75,6 +85,26 @@
                 <div class="form-group">
                     <label for="exampleInputEmail1">Qty</label>
                     <input type="text" class="form-control" id="Qty" placeholder="Enter Qty" value="@ViewBag.Qty">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <button class="btn btn-success my-1" type="button" id="addProduct">Add Product</button>
+                </div>
+                <div class="table-responsive">
+                    <table id="productTable" class="table">
+                        <thead>
+                            <tr>
+                                <th style="display:none">HiddenCustomersProduct</th>
+                                <th>Item Name</th>
+                                <th>Qty</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table rows will be dynamically populated here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -75,11 +75,11 @@
                     <select class="form-control select2bs4" name="cmbrmember" id="cmbrmember" style="width: 100%;">
                         <option selected="selected">Select a Member</option>
 
-                        @foreach (var distMaster in ViewBag.DistMasters)
+                        @*@foreach (var distMaster in ViewBag.DistMasters)
                         {
                             //<option value="@distMaster.Id">@distMaster.DisName</option>
                             <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.Name</option>
-                        }
+                        }*@
                     </select>
                 </div>
                 <div class="form-group">
@@ -318,6 +318,17 @@
                 $('#villageSelect').empty().append('<option value="">Select Village</option>');
                 $.each(data, function (i, v) {
                     $('#villageSelect').append(`<option value="${v.code}">${v.name}</option>`);
+                });
+            });
+        }
+    });
+    $('#villageSelect').on('change', function () {
+        const distId = $(this).val();
+        if (distId) {
+            $.get('/Home/GetMembername', { villagecode: distId }, function (data) {
+                $('#cmbrmember').empty().append('<option value="">Select Member</option>');
+                $.each(data, function (i, v) {
+                    $('#cmbrmember').append(`<option value="${v.code}">${v.name}</option>`);
                 });
             });
         }

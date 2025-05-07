@@ -14,11 +14,11 @@
 <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 <!-- Bootstrap4 Duallistbox -->
 <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-<h2>Sale Entry</h2>
+<h2>Cash Collection</h2>
 <div class="card card-default">
     <input type="hidden" id="hdnCmbTalukaId" value="@ViewBag.talikaid" />
     <div class="card-header">
-        <h3 class="card-title">Sale Entry</h3>
+        <h3 class="card-title">Cash Collection Entry</h3>
 
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -46,15 +46,26 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="exampleInputEmail1">To Member</label>
-                    <select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
-                        <option selected="selected">Select a Member</option>
+                    @*<select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
+            <option selected="selected">Select a Member</option>
 
+            @foreach (var distMaster in ViewBag.usermaster)
+            {
+                //<option value="@distMaster.Id">@distMaster.DisName</option>
+                <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.username</option>
+            }
+        </select>*@
+                    <select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
+                        <option selected="selected" value="">Select a Member</option>
                         @foreach (var distMaster in ViewBag.usermaster)
                         {
-                            //<option value="@distMaster.Id">@distMaster.DisName</option>
-                            <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.username</option>
+                            <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>
+                                @distMaster.username
+                            </option>
                         }
                     </select>
+                    <span id="errorMsg" style="color:red; display:none;">કૃપા કરી નામ Select કરો.</span>
+
                 </div>
             </div>
             <div class="col-md-6">
@@ -69,7 +80,7 @@
                         <label for="exampleInputEmail1" style="color:blue">અન્ય રકમ:- @ViewBag.extraamt</label>
                     </div>
                     <div>
-                        <label for="exampleInputEmail1" style="color:blueviolet">બાકી રકમ:- @ViewBag.totalamt</label>
+                        <label for="exampleInputEmail1" id="lblTotal" style="color:blueviolet">બાકી રકમ:- @ViewBag.totalamt</label>
                     </div>
                 </div>
             </div>
@@ -78,6 +89,7 @@
                 <div class="form-group">
                     <label for="exampleInputEmail1">Amount</label>
                     <input type="text" class="form-control" id="Qty" placeholder="Enter Amount" value="@ViewBag.Qty">
+                    <span id="errorMsg" style="color:red; display:none;">બાકી રકમ થી વધારે તમે જમા થશે નહિ.</span>
                 </div>
             </div>
         </div>
