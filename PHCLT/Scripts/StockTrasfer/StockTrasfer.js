@@ -25,14 +25,16 @@
         //var itemname = $('#cmbritemname option:selected').text();
         var products = [];
         $('#productTable tbody tr').each(function () {
-            var ItemName = $(this).find('td:eq(1)').text();  // Item name (second column)
-            var Qty = $(this).find('td:eq(2)').text();  // Qty (third column, editable)
+            var ItemName = $(this).find('td:eq(1)').text();
+            var Unit = $(this).find('td:eq(2)').text();
+            var Qty = $(this).find('td:eq(3)').text();  // Qty (third column, editable)
             var Itemid = $(this).find('td:eq(0)').text();  // Item name (second column)
             // Add the product data to the array
             products.push({
                 ItemName: ItemName,
                 Qty: Qty,
-                Itemid: Itemid
+                Itemid: Itemid,
+                unit:Unit
             });
         });
         $.ajax({
@@ -63,7 +65,7 @@
         var itemcode = $('#cmbritemname').val();
         var itemName = $('#cmbritemname option:selected').text();
         var qty = $('#Qty').val();
-
+        var Unit = $('#itemunit').val();
 
 
         // Check if inputs are not empty
@@ -80,6 +82,7 @@
                 <tr>
                     <td style="display:none">${itemcode}</td>
                     <td>${itemName}</td>
+                    <td>${Unit}</td>
                    <td>
                         ${qty}
                     </td>
@@ -91,6 +94,13 @@
 
         // Append the new row to the table body
         $('#productTable tbody').append(newRow);
+        var total = 0;
+        $('#productTable tbody tr').each(function () {
+            var amount = parseFloat($(this).find('td:eq(3)').text()) || 0;  // Convert to number
+            total += amount; // Add the number to total
+        });
+        $('#lbltotalamt').text(total.toFixed(2)); // Display total
+
         $('#cmbritemname').val('');
         $('#Qty').val('');
 
@@ -98,6 +108,12 @@
     $(document).on('click', '.deleteRow', function () {
         // Remove the row of the clicked button
         $(this).closest('tr').remove();
+        var total = 0;
+        $('#productTable tbody tr').each(function () {
+            var amount = parseFloat($(this).find('td:eq(3)').text()) || 0;  // Convert to number
+            total += amount; // Add the number to total
+        });
+        $('#lbltotalamt').text(total.toFixed(2));
         
     });
 });

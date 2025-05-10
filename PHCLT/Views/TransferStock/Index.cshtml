@@ -14,11 +14,12 @@
 <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 <!-- Bootstrap4 Duallistbox -->
 <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-<h2>Stock Trasfer Entry</h2>
+<h2>સ્ટોક ટ્રાન્સફર</h2>
 <div class="card card-default">
     <input type="hidden" id="hdnCmbTalukaId" value="@ViewBag.talikaid" />
     <div class="card-header">
-        <h3 class="card-title">Stock Trasfer</h3>
+        @*<h3 class="card-title">Stock Trasfer</h3>*@
+        <h3 class="card-title">સ્ટોક ટ્રાન્સફર</h3>
 
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -31,30 +32,32 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Bill No:-</label>
+                    @*<label for="exampleInputEmail1">Bill No:-</label>*@
+                    <label for="exampleInputEmail1">બીલ નંબર:-</label>
                     <input type="text" class="form-control" id="billno" placeholder="" value="@ViewBag.billno" disabled="disabled">
                 </div>
             </div>
             <!-- /.col -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Bill Date</label>
-                    <input type="date" class="form-control" id="txtEntryDate" placeholder="Select Entry Date">
+                    @*<label for="exampleInputEmail1">Bill Date</label>*@
+                    <label for="exampleInputEmail1">તારીખ:-</label>
+                    <input type="date" class="form-control" id="txtEntryDate" placeholder="">
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">To Member</label>
+                    <label for="exampleInputEmail1">નામ:-</label>
                     @*<select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
-                            <option selected="selected">Select a Member</option>
+                    <option selected="selected">Select a Member</option>
 
-                            @foreach (var distMaster in ViewBag.usermaster)
-                            {
-                                //<option value="@distMaster.Id">@distMaster.DisName</option>
-                                <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.username</option>
-                            }
-                        </select>*@
+                    @foreach (var distMaster in ViewBag.usermaster)
+                    {
+                        //<option value="@distMaster.Id">@distMaster.DisName</option>
+                        <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.username</option>
+                    }
+                </select>*@
                     <select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
                         <option selected="selected" value="">Select a Member</option>
                         @foreach (var distMaster in ViewBag.usermaster)
@@ -69,9 +72,10 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Item Name</label>
+                    <label for="exampleInputEmail1">વસ્તું નું નામ</label>
+
                     <select class="form-control select2bs4" name="cmbritemname" id="cmbritemname" style="width: 100%;">
-                        <option selected="selected">Select a Item Name</option>
+                        <option selected="selected">વસ્તું નું નામ Select કરો..</option>
 
                         @foreach (var distMaster in ViewBag.itemmast)
                         {
@@ -82,8 +86,17 @@
                 </div>
             </div>
             <div class="col-md-6">
+                <div class="form-group" id="unit">
+                    <label for="paymentType">Unit</label>
+                    <select class="form-control" id="itemunit">
+                        <option value="કિલોગ્રામ">કિલોગ્રામ</option>
+                        <option value="નંગ">નંગ</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Qty</label>
+                    <label for="exampleInputEmail1">જત્થો:-</label>
                     <input type="text" class="form-control" id="Qty" placeholder="Enter Qty" value="@ViewBag.Qty">
                 </div>
             </div>
@@ -97,6 +110,7 @@
                             <tr>
                                 <th style="display:none">HiddenCustomersProduct</th>
                                 <th>Item Name</th>
+                                <th>Unit</th>
                                 <th>Qty</th>
                                 <th>Action</th>
                             </tr>
@@ -107,11 +121,18 @@
                     </table>
                 </div>
             </div>
+            <div class="card-footer">
+                <button type="button" id="btnsave" class="btn btn-primary">Save</button>
+                @*<button type="button" id="btnviewlist" class="btn btn-primary">View List</button>*@
+
+                <a>Total Amount:</a> <label id="lbltotalamt" style="text-align: center; font-weight: bold; color: red;"></label>
+
+            </div>
         </div>
     </div>
     <div class="card-footer">
-        <button type="button" id="btnsave" class="btn btn-primary">Save</button>
-        <button type="button" id="btnviewlist" class="btn btn-primary">View List</button>
+        @*<button type="button" id="btnsave" class="btn btn-primary">Save</button>*@
+        @*<button type="button" id="btnviewlist" class="btn btn-primary">View List</button>*@
     </div>
 </div>
 <script src="~/plugins/daterangepicker/daterangepicker.js"></script>

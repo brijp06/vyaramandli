@@ -48,7 +48,8 @@ namespace PHCLT.Controllers
                         ItemName = itemRow["ItemName"].ToString(),
                         Qty = Convert.ToInt32(itemRow["TQty"]),
                         Rate = Convert.ToDecimal(itemRow["TRate"]),
-                        Total = Convert.ToDecimal(itemRow["Tnetamt"])
+                        Total = Convert.ToDecimal(itemRow["Tnetamt"]),
+                        Unit= itemRow["Unit"].ToString(),
                     };
 
                     dreport.Items.Add(item);
@@ -147,9 +148,9 @@ namespace PHCLT.Controllers
             List<itemledreport> itemMaster = new List<itemledreport>();
             var userId = HttpContext.Session["UserId"].ToString();
             ob.excute("delete from tmpitemledreport where userid=" + userId + "");
-            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,'Sales',BillDate,itemid,userid,0,TQty from Billdetail where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + "");
-            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,remarks,BillDate,itemid,userid,InQty,0 from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and inqty<>0");
-            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty) select billno,remarks,BillDate,itemid,userid,0,Outqty from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and Outqty<>0");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty,Unit) select billno,'Sales',BillDate,itemid,userid,0,TQty,Unit from Billdetail where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + "");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty,Unit) select billno,remarks,BillDate,itemid,userid,InQty,0,Unit from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and inqty<>0");
+            ob.excute("insert into tmpitemledreport(billno, billtype,BillDate, itemid, userid, inqty, outqty,Unit) select billno,remarks,BillDate,itemid,userid,0,Outqty,Unit from ItemTrans where itemid=" + itemid + " and billdate between '" + fromdate + "' and '" + todate + "' and userid=" + userId + " and Outqty<>0");
             DataTable dt = ob.Returntable("select * from tmpitemledreport where userid=" + userId + " order by BillDate");
             double cr = 0;
             Double dr = 0;
@@ -175,7 +176,8 @@ namespace PHCLT.Controllers
                     Billtype = dt.Rows[i]["billtype"].ToString(),
                     inqty = dt.Rows[i]["inqty"].ToString(),
                     outqty = dt.Rows[i]["outqty"].ToString(),
-                    Balanqty = bal.ToString("F2")
+                    Balanqty = bal.ToString("F2"),
+                    Unit= dt.Rows[i]["Unit"].ToString() 
                 };
                 itemMaster.Add(distMaster);
             }

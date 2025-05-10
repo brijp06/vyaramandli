@@ -422,6 +422,8 @@ namespace HRMS.Controllers
             public string amout { get; set; }
 
             public string itemgroup { get; set; }
+
+            public string unit { get; set; }
         }
         [HttpPost]
         public JsonResult Addsale(string Billno, string billdate, string Membid, string MembName, string Ismem, string Ptype, string totalamt,string villageid,string talukaname, string products)
@@ -441,8 +443,7 @@ namespace HRMS.Controllers
 
                 foreach (var product in productList)
                 {
-                    ob.excute("Insert Into Billdetail(Billno,BillDate ,Itemid, Itemname, TQty, Ptype, Trate,Tnetamt, Userid,groupid) values(" + Billno + ",'" + billdate + "'," + product.Itemid + ",N'" + product.ItemName + "'," + product.Qty + ",'" + Ptype + "'," + product.rate + "," + product.amout + "," + userId + "," + product.itemgroup + ")");
-
+                    ob.excute("Insert Into Billdetail(Billno,BillDate ,Itemid, Itemname, TQty, Ptype, Trate,Tnetamt, Userid,groupid,Unit) values(" + Billno + ",'" + billdate + "'," + product.Itemid + ",N'" + product.ItemName + "'," + product.Qty + ",'" + Ptype + "'," + product.rate + "," + product.amout + "," + userId + "," + product.itemgroup + ",N'" + product.unit.ToString().Trim() + "')");
                 }
 
                 result.opstatus = true;

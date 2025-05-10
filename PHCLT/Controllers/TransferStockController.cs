@@ -104,6 +104,9 @@ namespace PHCLT.Controllers
 
             public string Itemid { get; set; }
 
+            public string unit { get; set; }
+
+
         }
         [HttpPost]
         public JsonResult Addstock(string Billno, string billdate, string userid,string username, string products)
@@ -119,8 +122,8 @@ namespace PHCLT.Controllers
                 var fullname = HttpContext.Session["UsesFullname"].ToString();
                 foreach (var product in productList)
                 {
-                    ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname,remarks ) values(" + Billno + ",'" + billdate + "'," + suserId + ",0," + product.Qty + "," + product.Itemid + ",N'" + product.ItemName + "',N'" + username + " ને ટ્રાન્સફર આપ્યા.')");
-                    ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname,remarks ) values(" + Billno + ",'" + billdate + "'," + userid + "," + product.Qty + ",0," + product.Itemid + ",N'" + product.ItemName + "',N'" + fullname + " માંથી  ટ્રાન્સફર આવ્યા.')");
+                    ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname,remarks,Unit ) values(" + Billno + ",'" + billdate + "'," + suserId + ",0," + product.Qty + "," + product.Itemid + ",N'" + product.ItemName + "',N'" + username.ToString().Trim() + " ને ટ્રાન્સફર આપ્યા.',N'" + product.unit.ToString().Trim() + "')");
+                    ob.excute("Insert Into ItemTrans(Billno, Billdate,Userid, InQty, Outqty, Itemid, Itemname,remarks,Unit ) values(" + Billno + ",'" + billdate + "'," + userid + "," + product.Qty + ",0," + product.Itemid + ",N'" + product.ItemName + "',N'" + fullname.ToString().Trim() + " માંથી  ટ્રાન્સફર આવ્યા.',N'" + product.unit.ToString().Trim() + "')");
                 }
 
                 result.opstatus = true;

@@ -73,10 +73,11 @@
         $('#productTable tbody tr').each(function () {
             var ItemName = $(this).find('td:eq(1)').text();  // Item name (second column)
             var Qty = $(this).find('td:eq(2)').text();  // Qty (third column, editable)
-            var rate = $(this).find('td:eq(3)').text();  // Item name (second column)
-            var amout = $(this).find('td:eq(4)').text();  // Item name (second column)
+            var rate = $(this).find('td:eq(4)').text();  // Item name (second column)
+            var amout = $(this).find('td:eq(5)').text();  // Item name (second column)
             var Itemid = $(this).find('td:eq(0)').text();  // Item name (second column)
-            var itemgroup = $(this).find('td:eq(5)').text();
+            var itemgroup = $(this).find('td:eq(6)').text();
+            var Unit = $(this).find('td:eq(3)').text();
             // Add the product data to the array
             products.push({
                 ItemName: ItemName,
@@ -84,7 +85,8 @@
                 rate: rate,
                 amout: amout,
                 Itemid: Itemid,
-                itemgroup: itemgroup
+                itemgroup: itemgroup,
+                unit: Unit
             });
         });
         $.ajax({
@@ -127,7 +129,7 @@
         var itemgroup = $('#itemGroupSelect').val();
         var qty = $('#Qty').val();
         var rate = $('#Rate').val();
-
+        var Unit = $('#itemunit').val();
 
         // Check if inputs are not empty
         if (itemName.trim() === '') {
@@ -147,6 +149,9 @@
                         ${qty}
                     </td>
                     <td>
+                       ${Unit}
+                    </td>
+                    <td>
                        ${rate}
                     </td>
                     <td>
@@ -163,7 +168,7 @@
         $('#productTable tbody').append(newRow);
         var total = 0;
         $('#productTable tbody tr').each(function () {
-            var amount = parseFloat($(this).find('td:eq(4)').text()) || 0;  // Convert to number
+            var amount = parseFloat($(this).find('td:eq(5)').text()) || 0;  // Convert to number
             total += amount; // Add the number to total
         });
         $('#lbltotalamt').text(total.toFixed(2)); // Display total
@@ -180,7 +185,7 @@
         $(this).closest('tr').remove();
         var total = 0;
         $('#productTable tbody tr').each(function () {
-            var amount = parseFloat($(this).find('td:eq(4)').text()) || 0;  // Convert to number
+            var amount = parseFloat($(this).find('td:eq(5)').text()) || 0;  // Convert to number
             total += amount; // Add the number to total
         });
         $('#lbltotalamt').text(total.toFixed(2));

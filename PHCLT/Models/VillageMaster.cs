@@ -40,6 +40,8 @@ namespace PHCLT.Models
     public class BillItem
     {
         public string ItemName { get; set; }
+        public string Unit { get; set; }
+
         public int Qty { get; set; }
         public decimal Rate { get; set; }
         public decimal Total { get; set; }
@@ -55,6 +57,8 @@ namespace PHCLT.Models
         public string Balanqty { get; set; }
 
         public string Billtype { get; set; }
+
+        public string Unit { get; set; }
     }
 
 }

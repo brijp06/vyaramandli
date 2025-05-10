@@ -13,12 +13,12 @@
 <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 <!-- Bootstrap4 Duallistbox -->
 <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-<h2>Sale Entry</h2>
+<h2>વેચાણ એન્ટ્રી</h2>
 <div class="card card-default">
     <input type="hidden" id="hdnCmbTalukaId" value="@ViewBag.talikaid" />
     <div class="card-header">
-        <h3 class="card-title">Sale Entry</h3>
-
+        @*<h3 class="card-title">Sale Entry</h3>*@
+        <h3 class="card-title">વેચાણ એન્ટ્રી</h3>
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -30,18 +30,22 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Bill No:-</label>
+                    @*<label for="exampleInputEmail1">Bill No:-</label>*@
+                    <label for="exampleInputEmail1">બીલ નંબર:-</label>
                     <input type="text" class="form-control" id="billno" placeholder="" value="@ViewBag.billno" disabled="disabled">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Bill Date</label>
+                    @*<label for="exampleInputEmail1">Bill Date</label>*@
+                    <label for="exampleInputEmail1">તારીખ:-</label>
+
                     <input type="date" class="form-control" id="txtEntryDate" placeholder="Select Entry Date">
                 </div>
                 <!-- /.form-group -->
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Taluka</label>
+                    @*<label for="exampleInputEmail1">Taluka</label>*@
+                    <label for="exampleInputEmail1">તાલુકો:-</label>
                     <select class="form-control select2bs4" name="cmbtaluka" id="cmbtaluka" style="width: 100%;">
-                        <option selected="selected">Select a Taluka</option>
+                        <option selected="selected">તાલુકો select કરો.</option>
 
                         @foreach (var distMaster in ViewBag.taluka)
                         {
@@ -55,12 +59,13 @@
             <!-- /.col -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Village</label>
+                    @*<label>Village</label>*@
+                    <label>ગામ</label>
                     <select class="form-control select2bs4" id="villageSelect" style="width: 100%;">
                         <option value="">Select Village</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="exampleInputPassword1">શું તમે સભાસદ છો?</label>
                     <div>
@@ -71,20 +76,24 @@
                     </div>
                 </div>
                 <div class="form-group" id="memberoption" style="display: none;">
-                    <label for="exampleInputEmail1">Member Name</label>
+                    @*<label for="exampleInputEmail1">Member Name</label>*@
+                    <label for="exampleInputEmail1">સભાસદ નું નામ:-</label>
+
                     <select class="form-control select2bs4" name="cmbrmember" id="cmbrmember" style="width: 100%;">
                         <option selected="selected">Select a Member</option>
 
                         @*@foreach (var distMaster in ViewBag.DistMasters)
-                        {
-                            //<option value="@distMaster.Id">@distMaster.DisName</option>
-                            <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.Name</option>
-                        }*@
+                            {
+                                //<option value="@distMaster.Id">@distMaster.DisName</option>
+                                <option value="@distMaster.Id" @(ViewBag.SelectedDistrictId == distMaster.Id ? "selected" : "")>@distMaster.Name</option>
+                            }*@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Remarks</label>
-                    <input type="text" class="form-control" id="rema" placeholder="Enter Remarks" value="@ViewBag.Remarks">
+                    @*<label for="exampleInputEmail1">Remarks</label>*@
+                    <label for="exampleInputEmail1">અન્ય વિગત</label>
+
+                    <input type="text" class="form-control" id="rema" placeholder="અન્ય વિગત" value="@ViewBag.Remarks">
                 </div>
 
 
@@ -106,9 +115,11 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Item Group</label>
+                    @*<label for="exampleInputEmail1">Item Group</label>*@
+                    <label for="exampleInputEmail1">વસ્તું નું ગ્રુપ</label>
+
                     <select class="form-control select2bs4" name="itemGroupSelect" id="itemGroupSelect" style="width: 100%;">
-                        <option selected="selected">Select a Itemgroup</option>
+                        <option selected="selected">વસ્તું નું ગ્રુપ Select કરો..</option>
 
                         @foreach (var distMaster in ViewBag.ItemGroups)
                         {
@@ -130,27 +141,43 @@
                         </select>
                     </div>*@
                 <div class="form-group">
-                    <label>Item Name</label>
+                    @*<label>Item Name</label>*@
+                    <label>વસ્તું નું નામ</label>
+
                     <select class="form-control select2bs4" name="cmbritemname" id="cmbritemname" onchange="getrate(this.value)" style="width: 100%;">
-                        <option value="">Select Item</option>
+                        <option value="">વસ્તું નું નામ Select કરો..</option>
                     </select>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Qty</label>
-                    <input type="text" class="form-control" id="Qty" placeholder="Enter Qty" value="@ViewBag.Qty">
+                    @*<label for="exampleInputEmail1">Qty</label>*@
+                    <label for="exampleInputEmail1">જત્થો:-</label>
+
+                    <input type="text" class="form-control" id="Qty" placeholder="" value="@ViewBag.Qty">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Rate</label>
-                    <input type="text" class="form-control" id="Rate" placeholder="Enter  Rate" value="@ViewBag.Rate">
+                    @*<label for="exampleInputEmail1">Rate</label>*@
+                    <label for="exampleInputEmail1">ભાવ:-</label>
+                    <input type="text" class="form-control" id="Rate" placeholder="" value="@ViewBag.Rate">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" id="unit">
+                    <label for="paymentType">Unit</label>
+                    <select class="form-control" id="itemunit">
+                        <option value="કિલોગ્રામ">કિલોગ્રામ</option>
+                        <option value="નંગ">નંગ</option>
+                    </select>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Total Amount:-</label>
+                    @*                    <label for="exampleInputEmail1">Total Amount:-</label>*@
+                    <label for="exampleInputEmail1">કુલ રકમ:-</label>
+
                     <input type="text" class="form-control" id="totalamount" placeholder="" value="@ViewBag.totalamount" disabled="disabled">
                 </div>
             </div>
@@ -167,6 +194,7 @@
                         <th style="display:none">HiddenCustomersProduct</th>
                         <th>Item Name</th>
                         <th>Qty</th>
+                        <th>Unit</th>
                         <th>Rate</th>
                         <th>Total Amount</th>
                         <th>Action</th>
@@ -180,7 +208,7 @@
     </div>
     <div class="card-footer">
         <button type="button" id="btnsave" class="btn btn-primary">Save</button>
-        <button type="button" id="btnviewlist" class="btn btn-primary">View List</button>
+        @*<button type="button" id="btnviewlist" class="btn btn-primary">View List</button>*@
 
         <a>Total Amount:</a> <label id="lbltotalamt" style="text-align: center; font-weight: bold; color: red;"></label>
 

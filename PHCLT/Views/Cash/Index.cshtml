@@ -14,11 +14,11 @@
 <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 <!-- Bootstrap4 Duallistbox -->
 <link rel="stylesheet" href="~/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
-<h2>Cash Collection</h2>
+<h2>કેશ કલેક્સન</h2>
 <div class="card card-default">
     <input type="hidden" id="hdnCmbTalukaId" value="@ViewBag.talikaid" />
     <div class="card-header">
-        <h3 class="card-title">Cash Collection Entry</h3>
+        <h3 class="card-title">કેશ કલેક્સન</h3>
 
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -31,21 +31,21 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Bill No:-</label>
+                    <label for="exampleInputEmail1">બીલ નંબર:-</label>
                     <input type="text" class="form-control" id="billno" placeholder="" value="@ViewBag.billno" disabled="disabled">
                 </div>
             </div>
             <!-- /.col -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Bill Date</label>
+                    <label for="exampleInputEmail1">તારીખ:-</label>
                     <input type="date" class="form-control" id="txtEntryDate" placeholder="Select Entry Date">
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">To Member</label>
+                    <label for="exampleInputEmail1">નામ:-</label>
                     @*<select class="form-control select2bs4" name="usermaster" id="usermaster" style="width: 100%;">
             <option selected="selected">Select a Member</option>
 
@@ -87,7 +87,7 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Amount</label>
+                    <label for="exampleInputEmail1">ભરવા પાત્ર રકમ:-</label>
                     <input type="text" class="form-control" id="Qty" placeholder="Enter Amount" value="@ViewBag.Qty">
                     <span id="errorMsg" style="color:red; display:none;">બાકી રકમ થી વધારે તમે જમા થશે નહિ.</span>
                 </div>
@@ -96,7 +96,7 @@
     </div>
     <div class="card-footer">
         <button type="button" id="btnsave" class="btn btn-primary">Save</button>
-        <button type="button" id="btnviewlist" class="btn btn-primary">View List</button>
+        @*<button type="button" id="btnviewlist" class="btn btn-primary">View List</button>*@
     </div>
 </div>
 <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
